@@ -20,6 +20,21 @@
           <a :href="data?.href" class="blog-slider__button">点击跳转</a>
         </div>
       </div>
+      <div class="blog-slider__pagination"></div>
+    </div>
+    <!-- 底部foot 显示copyright -->
+    <div
+      style="
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+      "
+    >
+      Copyright &reg; 2024 All Rights 乔治弟弟.
     </div>
   </div>
 </template>
@@ -27,25 +42,12 @@
 <script lang="ts" setup>
 import dataJson from "../public/data/data.json";
 import Swiper from "swiper";
+import { Navigation, Pagination } from "swiper/modules";
+
+// 导入必要的Swiper模块
+Swiper.use([Navigation, Pagination]);
 
 const swiperRef = ref<Swiper>();
-
-onMounted(() => {
-  // 初始化Swiper实例
-  swiperRef.value = new Swiper(".blog-slider", {
-    spaceBetween: 30,
-    effect: "fade",
-    loop: true,
-    mousewheel: {
-      invert: false,
-    },
-    pagination: {
-      el: ".blog-slider__pagination",
-      clickable: true,
-    },
-  });
-});
-
 // 定义Swiper类型
 type SwiperOptions = {
   spaceBetween: number;
@@ -59,8 +61,36 @@ type SwiperOptions = {
     clickable: boolean;
   };
 };
+const swiperOptions: SwiperOptions = {
+  spaceBetween: 30,
+  effect: "coverflow",
+  loop: true,
+  mousewheel: {
+    invert: true,
+  },
+  pagination: {
+    el: ".blog-slider__pagination",
+    clickable: true,
+  },
+};
+onMounted(() => {
+  // 初始化Swiper实例
+  swiperRef.value = new Swiper(".blog-slider", swiperOptions);
+});
 </script>
 <style lang="scss" scoped>
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
+
+* {
+  box-sizing: border-box;
+}
+body {
+  // background-color: #ffe53b;
+  background-image: linear-gradient(147deg, #bc59c6 0%, #7dc4cc 74%);
+  min-height: 100vh;
+  font-family: "Fira Sans", sans-serif;
+  display: flex;
+}
 .blog-slider {
   width: 95%;
   position: relative;
@@ -77,14 +107,17 @@ type SwiperOptions = {
     max-width: 680px;
     height: 400px;
   }
+
   @media screen and (max-width: 768px) {
     min-height: 500px;
     height: auto;
     margin: 180px auto;
   }
+
   @media screen and (max-height: 500px) and (min-width: 992px) {
     height: 350px;
   }
+
   &__item {
     display: flex;
     align-items: center;
@@ -100,6 +133,7 @@ type SwiperOptions = {
           transition-delay: 0.3s;
         }
       }
+
       .blog-slider__content {
         > * {
           opacity: 1;
@@ -120,12 +154,12 @@ type SwiperOptions = {
     width: 300px;
     flex-shrink: 0;
     height: 300px;
-    background-image: linear-gradient(147deg, #bc59c6 0%, #7dc4cc 195%);
-    box-shadow: 4px 13px 30px 1px rgba(82, 82, 82, 0.2);
+    // background-image: linear-gradient(147deg, #bc59c6 0%, #7dc4cc 195%);
+    // box-shadow: 4px 13px 30px 1px rgba(82, 82, 82, 0.2);
     border-radius: 20px;
     transform: translateX(-80px);
 
-    // overflow: hidden;
+    overflow: hidden;
 
     &:after {
       content: "";
@@ -134,6 +168,7 @@ type SwiperOptions = {
       left: 0;
       width: 100%;
       height: 100%;
+      // background-image: linear-gradient(147deg, #fe8a39 0%, #fd3838 74%);
       border-radius: 20px;
       opacity: 0.8;
     }
@@ -149,8 +184,9 @@ type SwiperOptions = {
     }
 
     @media screen and (max-width: 992px) {
-      width: 45%;
+      // width: 45%;
     }
+
     @media screen and (max-width: 768px) {
       transform: translateY(-50%);
       width: 90%;
@@ -166,8 +202,9 @@ type SwiperOptions = {
   }
 
   &__content {
-    width: 60%;
+    // width: 60%;
     padding-right: 25px;
+
     @media screen and (max-width: 992px) {
       // width: 55%;
     }
@@ -255,6 +292,7 @@ type SwiperOptions = {
       justify-content: center;
       align-items: center;
     }
+
     &.swiper-pagination-bullets .swiper-pagination-bullet {
       margin: 8px 0;
 
