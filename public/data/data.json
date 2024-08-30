@@ -9,13 +9,14 @@
   {
     "image": "/images/CodePen.png ",
     "icon": "fa fa-codepen",
+    "title": " 乔治弟弟 CodePen",
     "text": " 这是我的CodePen，时不时会写了一些前端的基础小组件还有一些花里胡哨并且没什么用的东西。",
     "href": "https://codepen.io/qzfrato"
   },
   {
     "image": "/images/tx.png ",
     "icon": "fa fa-desktop",
-    "title": " George 微信公众号",
+    "title": " 乔治弟弟 博客",
     "text": "由于云服务器过期目前处于维护阶段,日常会上传一些做项目的时候遇到问题的debugger方法，还有一些自学的笔记，或者是好用的软件的分享。",
     "href": "https://mp.weixin.qq.com/s/Q-0XJqQXJJ-8XK0Zq6YxqQ"
   }
