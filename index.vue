@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-slider">
+  <swiper-slide>
     <div class="blog-slider__wrap swiper-wrapper">
       <div
         class="blog-slider__item swiper-slide"
@@ -36,14 +36,14 @@
     >
       Copyright &reg; 2024 All Rights 乔治弟弟.
     </div>
-  </div>
+  <swiper-slide/>
 </template>
 
 <script lang="ts" setup>
 import dataJson from "../public/data/data.json";
-import Swiper from "swiper";
-import "swiper/css";
-import { Navigation, Pagination } from "swiper/modules";
+import {Swiper,SwiperSlide } from "swiper/vue";
+import 'swiper/css';
+import { Navigation, Pagination,Mousewheel  } from "swiper/modules";
 
 // 不要一次性渲染整个dataJson当Pagination页面更换才渲染
 interface DataItem {
