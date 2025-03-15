@@ -33,7 +33,8 @@ import { ref, onMounted, nextTick } from "vue";
 import Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
+// 导入Mousewheel模块
+import { Pagination, Mousewheel } from "swiper/modules";
 import dataJson from "../public/data/data.json";
 
 interface DataItem {
@@ -49,7 +50,7 @@ const details = ref<DataItem[]>(dataJson);
 onMounted(() => {
   nextTick(() => {
     new Swiper(".blog-slider", {
-      modules: [Pagination],
+      modules: [Pagination, Mousewheel], // 添加Mousewheel模块
       loop: true,
       pagination: {
         el: ".blog-slider__pagination",
@@ -57,7 +58,18 @@ onMounted(() => {
       },
       spaceBetween: 30,
       effect: "coverflow",
-      mousewheel: true,
+      coverflowEffect: {
+        rotate: 0,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: false,
+      },
+      mousewheel: {
+        sensitivity: 1, // 调整滚轮灵敏度
+        releaseOnEdges: true, // 在边缘释放滚动
+      },
+      slidesPerView: 1,
     });
   });
 });
@@ -68,6 +80,13 @@ onMounted(() => {
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden; // 添加这一行来隐藏滚动条
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -89,7 +108,8 @@ body {
   border-radius: 25px;
   height: 400px;
   transition: all 0.3s;
-  overflow: hidden;
+  overflow: hidden; 
+  position: relative; 
 
   @media screen and (max-width: 992px) {
     max-width: 680px;
@@ -148,8 +168,10 @@ body {
     background-image: linear-gradient(147deg, #bc59c6 0%, #7dc4cc 195%);
     box-shadow: 4px 13px 30px 1px rgba(82, 82, 82, 0.2);
     border-radius: 20px;
-    transform: translateX(-80px);
+    transform: translateX(-80px); // 保留这个变换
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 
     img {
       width: 100%;
@@ -173,7 +195,7 @@ body {
 
   &__content {
     padding-right: 25px;
-    z-index: 0; // 设置 z-index 让内容显示在下层
+    z-index: 0; // 保持内容在下层
 
     @media screen and (max-width: 768px) {
       margin-top: -80px;
@@ -224,11 +246,11 @@ body {
   }
 
   .swiper-pagination {
-    position: absolute;
-    bottom: 10px;
+    position: absolute; // 改回绝对定位
+    bottom: 20px; // 距离底部20px
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
+    z-index: 2;
 
     .swiper-pagination-bullet {
       width: 10px;
