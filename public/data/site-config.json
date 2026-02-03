@@ -4,7 +4,7 @@
       "type": "hero",
       "slug": "home",
       "backgroundGradient": "linear-gradient(147deg, #0f172a 0%, #1e1b4b 74%)",
-      "title": "乔治弟弟",
+      "title": "乔治弟弟_Blog",
       "subtitle": "探索代码的无限可能",
       "actionButton": {
         "text": "开始探索",
@@ -63,6 +63,10 @@
         {
           "icon": "fa fa-github",
           "href": "https://github.com/qiaozhididi"
+        },
+        {
+          "icon": "fa fa-envelope",
+          "href": "mailto:qzfrato@163.com"
         }
       ],
       "copyright": "Copyright © 2026 乔治弟弟. All Rights Reserved."

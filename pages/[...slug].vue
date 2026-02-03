@@ -25,18 +25,18 @@
           
           <!-- Type: Hero -->
           <div v-if="slide.type === 'hero'" class="slide-content-wrapper">
-            <h1 class="text-6xl md:text-9xl font-black mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl">
+            <h1 class="text-3xl md:text-9xl font-black mb-6 md:mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl">
               <span class="text-white">
                 {{ slide.title }}
               </span>
             </h1>
-            <p class="text-2xl md:text-4xl text-gray-200 mb-12 relative z-10 fragment fade-up text-center font-light tracking-wide">
+            <p class="text-base md:text-4xl text-gray-200 mb-8 md:mb-12 relative z-10 fragment fade-up text-center font-light tracking-wide px-4">
               {{ slide.subtitle }}
             </p>
             <div v-if="slide.actionButton" class="relative z-10 fragment fade-up">
-              <NuxtLink :to="slide.actionButton.link" class="btn-primary">
+              <button @click.stop="handleHeroButtonClick(slide.actionButton.link)" class="btn-primary text-base md:text-lg px-6 py-2 md:px-8 md:py-3">
                 {{ slide.actionButton.text }}
-              </NuxtLink>
+              </button>
             </div>
           </div>
 
@@ -45,14 +45,14 @@
             <!-- Cover Slide -->
             <section :data-background-color="slide.cover.backgroundColor || '#111827'" :data-slug="slide.cover.slug">
               <div class="slide-content-wrapper">
-                <h2 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-8 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-6 md:mb-8 text-center">
                   {{ slide.cover.title }}
                 </h2>
-                <p class="text-xl text-gray-400 text-center">
+                <p class="text-lg md:text-xl text-gray-400 text-center px-4">
                   {{ slide.cover.subtitle }}
                 </p>
-                <div class="mt-12 animate-bounce text-gray-500">
-                  <i class="fa fa-chevron-down text-3xl"></i>
+                <div class="mt-8 md:mt-12 animate-bounce text-gray-500">
+                  <i class="fa fa-chevron-down text-2xl md:text-3xl"></i>
                 </div>
               </div>
             </section>
@@ -64,32 +64,31 @@
               data-background-color="#1f2937"
               :data-slug="item.slug"
             >
-              <div class="flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-16 max-w-7xl mx-auto p-4 h-full w-full">
+              <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 h-full w-full overflow-y-auto">
                 <!-- Image Side -->
-                <div class="w-full lg:w-1/2 flex justify-center items-center">
-                   <div class="relative group w-full max-w-md">
+                <div class="w-full lg:w-1/2 flex justify-center items-center shrink-0">
+                   <div class="relative group w-full max-w-[280px] md:max-w-md">
                      <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                      <img :src="item.image" :alt="item.title" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
                    </div>
                 </div>
                 
                 <!-- Content Side -->
-                <div class="w-full lg:w-1/2 text-left flex flex-col justify-center">
-                  <div class="flex items-center gap-4 mb-6">
-                    <div class="p-3 bg-gray-800 rounded-full shadow-lg">
-                        <i :class="item.icon" class="text-3xl text-purple-400"></i>
+                <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center shrink-0">
+                  <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div class="p-2 md:p-3 bg-gray-800 rounded-full shadow-lg">
+                        <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400"></i>
                     </div>
-                    <h3 class="text-3xl md:text-4xl font-bold text-white">{{ item.title }}</h3>
+                    <h3 class="text-2xl md:text-4xl font-bold text-white">{{ item.title }}</h3>
                   </div>
-                  <div class="prose prose-invert prose-lg max-w-none mb-8">
-                      <p class="text-gray-300 leading-relaxed text-lg md:text-xl">
+                  <div class="prose prose-invert prose-sm md:prose-lg max-w-none mb-6 md:mb-8 mx-auto lg:mx-0">
+                      <p class="text-gray-300 leading-relaxed text-base md:text-xl">
                         {{ item.text }}
                       </p>
                   </div>
-                  <div>
-                      <a :href="item.href" target="_blank" class="btn-primary inline-flex items-center gap-2">
+                  <div class="flex justify-center lg:justify-start">
+                      <a :href="item.href" target="_blank" class="btn-primary inline-flex items-center text-sm md:text-lg px-6 py-2 md:px-8 md:py-3">
                         <span>查看详情</span>
-                        <i class="fa fa-external-link text-sm"></i>
                       </a>
                   </div>
                 </div>
@@ -99,21 +98,21 @@
 
           <!-- Type: About -->
           <div v-else-if="slide.type === 'about'" class="slide-content-wrapper">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-white">{{ slide.title }}</h2>
-            <div class="max-w-4xl mx-auto bg-gray-800/40 p-10 md:p-14 rounded-3xl backdrop-blur-md border border-gray-700/50 shadow-2xl">
-              <p class="text-gray-200 text-lg md:text-2xl leading-relaxed text-left" v-html="slide.content"></p>
+            <h2 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 text-white">{{ slide.title }}</h2>
+            <div class="max-w-4xl mx-auto bg-gray-800/40 p-6 md:p-14 rounded-3xl backdrop-blur-md border border-gray-700/50 shadow-2xl mx-4">
+              <p class="text-gray-200 text-base md:text-2xl leading-relaxed text-center md:text-left" v-html="slide.content"></p>
             </div>
           </div>
 
           <!-- Type: Contact -->
           <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-10">{{ slide.title }}</h2>
-            <div class="flex justify-center gap-8 mb-16">
+            <h2 class="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-10">{{ slide.title }}</h2>
+            <div class="flex justify-center gap-6 md:gap-8 mb-12 md:mb-16">
               <a v-for="(link, lIndex) in slide.socialLinks" :key="lIndex" :href="link.href" target="_blank" class="text-gray-400 hover:text-white transition transform hover:scale-110">
-                <i :class="link.icon" class="text-5xl"></i>
+                <i :class="link.icon" class="text-4xl md:text-5xl"></i>
               </a>
             </div>
-            <p class="text-gray-500 text-sm md:text-base font-medium">
+            <p class="text-gray-500 text-xs md:text-base font-medium">
               {{ slide.copyright }}
             </p>
           </div>
@@ -138,8 +137,17 @@ import 'reveal.js/dist/theme/black.css';
 const route = useRoute();
 const router = useRouter();
 
+definePageMeta({
+  key: 'blog-main',
+});
+
+function handleHeroButtonClick(link: string) {
+  router.push(link);
+}
+
 // 使用 Nuxt 的 useFetch 来获取数据
 const { data: config, pending, error } = useFetch<any>('/data/site-config.json', {
+  key: 'site-config', // 固定的 key，防止路由切换时重新请求导致闪烁
   server: false, // 强制在客户端获取，因为 Reveal.js 是纯客户端库
   lazy: true
 });
@@ -178,6 +186,9 @@ onUnmounted(() => {
   if (revealInstance) {
     revealInstance = null;
   }
+  document.removeEventListener('mousedown', handleMouseDown);
+  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mouseup', handleMouseUp);
 });
 
 // Helper: 根据 slug 获取 slide 索引
@@ -240,16 +251,72 @@ function getPathFromIndices(h: number, v: number) {
   return rootSlug === 'home' ? '/' : `/${rootSlug}`;
 }
 
+const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+
+// Variables for drag handling
+let startX = 0;
+let startY = 0;
+let isDragging = false;
+const DRAG_THRESHOLD = 50; // pixels
+
+function handleMouseDown(e: MouseEvent) {
+  // Ignore clicks on buttons or links to allow them to function
+  if ((e.target as HTMLElement).closest('button, a')) return;
+  
+  startX = e.clientX;
+  startY = e.clientY;
+  isDragging = true;
+}
+
+function handleMouseMove(e: MouseEvent) {
+  if (!isDragging) return;
+  // e.preventDefault(); // Prevent text selection
+}
+
+function handleMouseUp(e: MouseEvent) {
+  if (!isDragging) return;
+  isDragging = false;
+  
+  const deltaX = e.clientX - startX;
+  const deltaY = e.clientY - startY;
+  
+  // Determine dominant axis
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    // Horizontal
+    if (Math.abs(deltaX) > DRAG_THRESHOLD) {
+      if (deltaX > 0) {
+        revealInstance?.left(); // Drag right -> go left (prev)
+      } else {
+        revealInstance?.right(); // Drag left -> go right (next)
+      }
+    }
+  } else {
+    // Vertical
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+       if (deltaY > 0) {
+         revealInstance?.up(); // Drag down -> go up (prev)
+       } else {
+         revealInstance?.down(); // Drag up -> go down (next)
+       }
+    }
+  }
+}
+
 async function initReveal() {
   await nextTick();
-  setTimeout(() => {
-    if (document.querySelector('.reveal') && !revealInstance) {
+  setTimeout(async () => {
+    const revealEl = document.querySelector('.reveal') as HTMLElement;
+    if (revealEl && !revealInstance) {
       try {
         // 根据当前路由计算初始 slide
         const slugArray = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug || 'home'];
         const { h, v } = getIndicesFromSlug(slugArray as string[]);
 
-        revealInstance = Reveal.initialize({
+        // Check mobile
+        const mobile = window.innerWidth < 768;
+
+        // 初始化 Reveal 实例
+        const deck = new Reveal(revealEl, {
             controls: true,
             progress: true,
             center: true,
@@ -260,22 +327,36 @@ async function initReveal() {
             plugins: [Markdown],
             touch: true,
             controlsTutorial: false,
-            disableLayout: false, 
+            // Mobile Optimization
+            width: mobile ? window.innerWidth : 960,
+            height: mobile ? window.innerHeight : 700,
+            margin: mobile ? 0 : 0.04,
+            minScale: mobile ? 1.0 : 0.2,
+            maxScale: mobile ? 1.0 : 2.0,
+            disableLayout: mobile, // 移动端禁用缩放，完全靠 CSS
         });
 
-        // 初始化完成后跳转到指定页面
-        revealInstance.on('ready', () => {
-             Reveal.slide(h, v);
-        });
+        // 保存实例
+        revealInstance = deck;
+
+        // 初始化
+        await deck.initialize();
+        
+        // Add mouse drag listeners
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        // 跳转到初始页面
+        deck.slide(h, v);
 
         // 监听切换事件，更新 URL
-        revealInstance.on('slidechanged', (event: any) => {
+        deck.on('slidechanged', (event: any) => {
             const h = event.indexh;
             const v = event.indexv;
             const newPath = getPathFromIndices(h, v);
             
             // 使用 router.replace 更新 URL
-            // onBeforeRouteUpdate 会被触发，但我们在其中做了 check 避免循环跳转
             if (route.path !== newPath) {
                  router.replace(newPath);
             }
@@ -297,6 +378,10 @@ async function initReveal() {
   background-color: white;
   color: #0f172a !important; /* 强制覆盖 Reveal.js 的链接颜色 */
   box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.39);
+  position: relative;
+  z-index: 50;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
@@ -313,6 +398,8 @@ async function initReveal() {
   justify-content: center;
   height: 100%;
   width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 /* 修复图片在 Reveal 中的默认样式 */
