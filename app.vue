@@ -1,19 +1,36 @@
 <template>
   <NuxtPage />
 </template>
+
 <style>
+/* Reset some basics */
 * {
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
 }
-body {
+
+html, body, #__nuxt {
+  height: 100%;
   width: 100%;
-  background-image: linear-gradient(147deg, #bc59c6 0%, #7dc4cc 74%);
-  min-height: 100vh;
-  height: 100vh;
-  font-family: "Fira Sans", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden; /* Reveal.js handles scrolling */
+}
+
+/* 全局滚动条样式优化 (仅用于Reveal内部滚动内容) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>

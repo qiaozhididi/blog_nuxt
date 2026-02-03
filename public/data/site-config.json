@@ -1,0 +1,71 @@
+{
+  "slides": [
+    {
+      "type": "hero",
+      "slug": "home",
+      "backgroundGradient": "linear-gradient(147deg, #0f172a 0%, #1e1b4b 74%)",
+      "title": "乔治弟弟",
+      "subtitle": "探索代码的无限可能",
+      "actionButton": {
+        "text": "开始探索",
+        "link": "/projects"
+      }
+    },
+    {
+      "type": "projects",
+      "slug": "projects",
+      "cover": {
+        "slug": "cover",
+        "title": "精选项目",
+        "subtitle": "向下滚动查看详情",
+        "backgroundColor": "#111827"
+      },
+      "items": [
+        {
+          "slug": "github",
+          "image": "/images/GitHub.png",
+          "icon": "fa fa-github",
+          "title": "乔治弟弟 GitHub",
+          "text": "开源代码的部分存放了一些自己学习某些技术栈的笔记以及一些在在校期间做的项目。",
+          "href": "https://github.com/qiaozhididi"
+        },
+        {
+          "slug": "codepen",
+          "image": "/images/CodePen.png",
+          "icon": "fa fa-codepen",
+          "title": "乔治弟弟 CodePen",
+          "text": "这是我的CodePen，时不时会写了一些前端的基础小组件还有一些花里胡哨并且没什么用的东西。",
+          "href": "https://codepen.io/qzfrato"
+        },
+        {
+          "slug": "blog",
+          "image": "/images/tx.png",
+          "icon": "fa fa-desktop",
+          "title": "乔治弟弟 博客",
+          "text": "由于云服务器过期目前处于维护阶段,日常会上传一些做项目的时候遇到问题的debugger方法，还有一些自学的笔记，或者是好用的软件的分享。",
+          "href": "https://mp.weixin.qq.com/s/Q-0XJqQXJJ-8XK0Zq6YxqQ"
+        }
+      ]
+    },
+    {
+      "type": "about",
+      "slug": "about",
+      "backgroundGradient": "linear-gradient(to bottom right, #111827, #000000)",
+      "title": "关于本站",
+      "content": "这是一个使用 <span class='text-green-400 font-bold'>Nuxt 3</span> 和 <span class='text-pink-400 font-bold'>Reveal.js</span> 构建的演示型博客主页。<br><br>打破传统网页的滚动模式，带来沉浸式的阅读体验。在这里，你可以找到我的 GitHub 开源项目、CodePen 创意组件以及日常的技术笔记。"
+    },
+    {
+      "type": "contact",
+      "slug": "contact",
+      "backgroundColor": "#000000",
+      "title": "保持联系",
+      "socialLinks": [
+        {
+          "icon": "fa fa-github",
+          "href": "https://github.com/qiaozhididi"
+        }
+      ],
+      "copyright": "Copyright © 2026 乔治弟弟. All Rights Reserved."
+    }
+  ]
+}
