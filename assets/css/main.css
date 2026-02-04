@@ -7,3 +7,17 @@ body {
   font-family: 'Fira Sans', sans-serif;
   @apply bg-gray-900 text-white;
 }
+
+/* Global Button Style */
+.btn-primary {
+  @apply bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-2xl border-none cursor-pointer;
+}
+
+.btn-primary:hover {
+  @apply from-purple-500 to-pink-500;
+}
+
+/* Force white text for Reveal.js compatibility */
+.reveal .btn-primary {
+  color: white !important;
+}

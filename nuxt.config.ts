@@ -1,6 +1,14 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-02-03',
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/content'
+  ],
+  content: {
+    highlight: {
+      theme: 'github-dark'
+    }
+  },
   css: ['~/assets/css/main.css'],
   app: {
     head: {

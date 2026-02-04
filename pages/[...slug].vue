@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-screen bg-black text-white">
+  <div class="h-screen w-full bg-black text-white overflow-hidden">
     <!-- Loading State -->
     <div v-if="pending || !config" class="flex items-center justify-center h-full">
       <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Reveal Content -->
-    <div v-else class="reveal theme-font-montserrat h-full w-full">
+    <div v-else class="reveal theme-font-montserrat h-full w-full" ref="revealContainer">
       <div class="slides">
         
         <section 
@@ -87,9 +87,9 @@
                       </p>
                   </div>
                   <div class="flex justify-center lg:justify-start">
-                      <a :href="item.href" target="_blank" class="btn-primary inline-flex items-center text-sm md:text-lg px-6 py-2 md:px-8 md:py-3">
+                      <button @click.stop="handleProjectClick(item.href)" class="btn-primary inline-flex items-center text-sm md:text-lg px-6 py-2 md:px-8 md:py-3">
                         <span>查看详情</span>
-                      </a>
+                      </button>
                   </div>
                 </div>
               </div>
@@ -126,8 +126,6 @@
 
 <script setup lang="ts">
 import { onMounted, nextTick, onUnmounted, watch } from 'vue';
-import Reveal from 'reveal.js';
-import Markdown from 'reveal.js/plugin/markdown/markdown.esm.js';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 // Import Reveal styles
@@ -139,10 +137,21 @@ const router = useRouter();
 
 definePageMeta({
   key: 'blog-main',
+  pageTransition: false, // 禁用页面过渡，避免 Reveal.js DOM 冲突
 });
 
 function handleHeroButtonClick(link: string) {
+  console.log('Hero button clicked:', link);
   router.push(link);
+}
+
+function handleProjectClick(href: string) {
+  console.log('Project button clicked:', href);
+  if (href.startsWith('/') && !href.startsWith('//')) {
+    router.push(href);
+  } else {
+    window.open(href, '_blank');
+  }
 }
 
 // 使用 Nuxt 的 useFetch 来获取数据
@@ -153,6 +162,7 @@ const { data: config, pending, error } = useFetch<any>('/data/site-config.json',
 });
 
 let revealInstance: any = null;
+const revealContainer = ref<HTMLElement | null>(null);
 
 // 处理路由更新（例如点击浏览器后退按钮）
 onBeforeRouteUpdate((to, from, next) => {
@@ -305,9 +315,16 @@ function handleMouseUp(e: MouseEvent) {
 async function initReveal() {
   await nextTick();
   setTimeout(async () => {
-    const revealEl = document.querySelector('.reveal') as HTMLElement;
+    // 确保组件没有被卸载
+    if (!revealContainer.value) return;
+
+    const revealEl = revealContainer.value;
     if (revealEl && !revealInstance) {
       try {
+        // Dynamic import for client-side only
+        const Reveal = (await import('reveal.js')).default;
+        const Markdown = (await import('reveal.js/plugin/markdown/markdown.esm.js')).default;
+
         // 根据当前路由计算初始 slide
         const slugArray = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug || 'home'];
         const { h, v } = getIndicesFromSlug(slugArray as string[]);

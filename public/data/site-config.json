@@ -40,10 +40,10 @@
         {
           "slug": "blog",
           "image": "/images/tx.png",
-          "icon": "fa fa-desktop",
-          "title": "乔治弟弟 博客",
-          "text": "由于云服务器过期目前处于维护阶段,日常会上传一些做项目的时候遇到问题的debugger方法，还有一些自学的笔记，或者是好用的软件的分享。",
-          "href": "https://mp.weixin.qq.com/s/Q-0XJqQXJJ-8XK0Zq6YxqQ"
+          "icon": "fa fa-book",
+          "title": "Obsidian 笔记",
+          "text": "这是我的个人笔记库，包含技术总结、学习心得和生活随笔。所有内容通过 Obsidian 编写并自动同步。",
+          "href": "/blog"
         }
       ]
     },
