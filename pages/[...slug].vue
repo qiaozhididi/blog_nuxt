@@ -358,6 +358,13 @@ async function initReveal() {
 
         initStatus.value = 'Initializing Reveal...';
 
+        // Check sections count
+        const sectionCount = revealEl.querySelectorAll('.slides > section').length;
+        if (sectionCount === 0) {
+             initStatus.value = 'Error: No sections found in DOM';
+             return;
+        }
+
         // 根据当前路由计算初始 slide
         const slugArray = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug || 'home'];
         const { h, v } = getIndicesFromSlug(slugArray as string[]);
@@ -391,7 +398,11 @@ async function initReveal() {
 
         // 初始化
         await deck.initialize();
-        initStatus.value = 'Ready';
+        
+        // Force layout update
+        deck.layout();
+        
+        initStatus.value = `Ready (${sectionCount} slides, target: ${h}/${v})`;
         
         // Add mouse drag listeners
         document.addEventListener('mousedown', handleMouseDown);
