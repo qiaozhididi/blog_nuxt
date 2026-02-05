@@ -122,10 +122,6 @@
       </div>
     </div>
     
-    <!-- Init Status (Debug) -->
-    <div class="fixed bottom-0 left-0 bg-white/10 text-white text-[10px] p-1 z-[9999] pointer-events-none">
-       Status: {{ initStatus }}
-    </div>
   </div>
 </template>
 
@@ -390,7 +386,7 @@ async function initReveal() {
             margin: mobile ? 0 : 0.04,
             minScale: mobile ? 1.0 : 0.2,
             maxScale: mobile ? 1.0 : 2.0,
-            disableLayout: mobile, // 移动端禁用缩放，完全靠 CSS
+            disableLayout: true, // 始终禁用 Reveal.js 的默认布局，使用 CSS 控制，避免计算错误导致的死循环
         });
 
         // 保存实例
@@ -471,6 +467,23 @@ async function initReveal() {
     background: transparent;
     border: none;
     box-shadow: none;
+}
+
+/* 强制 section 全屏，配合 disableLayout: true */
+:deep(.reveal .slides) {
+    height: 100% !important;
+    width: 100% !important;
+    text-align: center;
+}
+:deep(.reveal .slides > section) {
+    height: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    top: 0 !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 自定义动画 */
