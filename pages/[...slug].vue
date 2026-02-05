@@ -163,7 +163,7 @@ function resolvePath(path: string) {
 }
 
 // 使用 Nuxt 的 useFetch 来获取数据
-const { data: config, pending, error } = useFetch<any>('/data/site-config.json', {
+const { data: config, pending, error } = useFetch<any>(() => resolvePath('/data/site-config.json'), {
   key: 'site-config', // 固定的 key，防止路由切换时重新请求导致闪烁
   server: false, // 强制在客户端获取，因为 Reveal.js 是纯客户端库
   lazy: true
