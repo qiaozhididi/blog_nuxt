@@ -19,10 +19,11 @@
           v-for="(slide, index) in config.slides" 
           :key="index"
           :data-slug="slide.slug"
+          :style="slide.type !== 'projects' ? { background: slide.backgroundGradient || slide.backgroundColor } : {}"
         >
           
           <!-- Type: Hero -->
-          <div v-if="slide.type === 'hero'" class="slide-content-wrapper" :style="{ background: slide.backgroundGradient || slide.backgroundColor }">
+          <div v-if="slide.type === 'hero'" class="slide-content-wrapper">
             <h1 class="text-3xl md:text-9xl font-black mb-6 md:mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl">
               <span class="text-white">
                 {{ slide.title }}
@@ -41,8 +42,8 @@
           <!-- Type: Projects (Vertical Stack) -->
           <template v-else-if="slide.type === 'projects'">
             <!-- Cover Slide -->
-            <section :data-slug="slide.cover.slug">
-              <div class="slide-content-wrapper" :style="{ background: slide.cover.backgroundColor || '#111827' }">
+            <section :data-slug="slide.cover.slug" :style="{ background: slide.cover.backgroundColor || '#111827' }">
+              <div class="slide-content-wrapper">
                 <h2 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-6 md:mb-8 text-center">
                   {{ slide.cover.title }}
                 </h2>
@@ -60,8 +61,9 @@
               v-for="(item, itemIndex) in slide.items" 
               :key="itemIndex"
               :data-slug="item.slug"
+              style="background: #1f2937"
             >
-              <div class="slide-content-wrapper" style="background: #1f2937">
+              <div class="slide-content-wrapper">
                 <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 h-full w-full overflow-y-auto">
                   <!-- Image Side -->
                   <div class="w-full lg:w-1/2 flex justify-center items-center shrink-0">
@@ -96,7 +98,7 @@
           </template>
 
           <!-- Type: About -->
-          <div v-else-if="slide.type === 'about'" class="slide-content-wrapper" :style="{ background: slide.backgroundGradient || slide.backgroundColor }">
+          <div v-else-if="slide.type === 'about'" class="slide-content-wrapper">
             <h2 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 text-white">{{ slide.title }}</h2>
             <div class="max-w-4xl mx-auto bg-gray-800/40 p-6 md:p-14 rounded-3xl backdrop-blur-md border border-gray-700/50 shadow-2xl mx-4">
               <p class="text-gray-200 text-base md:text-2xl leading-relaxed text-center md:text-left" v-html="slide.content"></p>
@@ -104,7 +106,7 @@
           </div>
 
           <!-- Type: Contact -->
-          <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper" :style="{ background: slide.backgroundColor }">
+          <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper">
             <h2 class="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-10">{{ slide.title }}</h2>
             <div class="flex justify-center gap-6 md:gap-8 mb-12 md:mb-16">
               <a v-for="(link, lIndex) in slide.socialLinks" :key="lIndex" :href="link.href" target="_blank" class="text-gray-400 hover:text-white transition transform hover:scale-110">
