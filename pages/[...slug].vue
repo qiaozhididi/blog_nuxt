@@ -18,13 +18,11 @@
         <section 
           v-for="(slide, index) in config.slides" 
           :key="index"
-          :data-background-gradient="slide.backgroundGradient"
-          :data-background-color="slide.backgroundColor"
           :data-slug="slide.slug"
         >
           
           <!-- Type: Hero -->
-          <div v-if="slide.type === 'hero'" class="slide-content-wrapper">
+          <div v-if="slide.type === 'hero'" class="slide-content-wrapper" :style="{ background: slide.backgroundGradient || slide.backgroundColor }">
             <h1 class="text-3xl md:text-9xl font-black mb-6 md:mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl">
               <span class="text-white">
                 {{ slide.title }}
@@ -43,8 +41,8 @@
           <!-- Type: Projects (Vertical Stack) -->
           <template v-else-if="slide.type === 'projects'">
             <!-- Cover Slide -->
-            <section :data-background-color="slide.cover.backgroundColor || '#111827'" :data-slug="slide.cover.slug">
-              <div class="slide-content-wrapper">
+            <section :data-slug="slide.cover.slug">
+              <div class="slide-content-wrapper" :style="{ background: slide.cover.backgroundColor || '#111827' }">
                 <h2 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-6 md:mb-8 text-center">
                   {{ slide.cover.title }}
                 </h2>
@@ -61,35 +59,36 @@
             <section 
               v-for="(item, itemIndex) in slide.items" 
               :key="itemIndex"
-              data-background-color="#1f2937"
               :data-slug="item.slug"
             >
-              <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 h-full w-full overflow-y-auto">
-                <!-- Image Side -->
-                <div class="w-full lg:w-1/2 flex justify-center items-center shrink-0">
-                   <div class="relative group w-full max-w-[280px] md:max-w-md">
-                     <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                     <img :src="resolvePath(item.image)" :alt="item.title" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
-                   </div>
-                </div>
-                
-                <!-- Content Side -->
-                <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center shrink-0">
-                  <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-4 mb-4 md:mb-6">
-                    <div class="p-2 md:p-3 bg-gray-800 rounded-full shadow-lg">
-                        <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400"></i>
+              <div class="slide-content-wrapper" style="background: #1f2937">
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 h-full w-full overflow-y-auto">
+                  <!-- Image Side -->
+                  <div class="w-full lg:w-1/2 flex justify-center items-center shrink-0">
+                     <div class="relative group w-full max-w-[280px] md:max-w-md">
+                       <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                       <img :src="resolvePath(item.image)" :alt="item.title" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
+                     </div>
+                  </div>
+                  
+                  <!-- Content Side -->
+                  <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center shrink-0">
+                    <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-4 mb-4 md:mb-6">
+                      <div class="p-2 md:p-3 bg-gray-800 rounded-full shadow-lg">
+                          <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400"></i>
+                      </div>
+                      <h3 class="text-2xl md:text-4xl font-bold text-white">{{ item.title }}</h3>
                     </div>
-                    <h3 class="text-2xl md:text-4xl font-bold text-white">{{ item.title }}</h3>
-                  </div>
-                  <div class="prose prose-invert prose-sm md:prose-lg max-w-none mb-6 md:mb-8 mx-auto lg:mx-0">
-                      <p class="text-gray-300 leading-relaxed text-base md:text-xl">
-                        {{ item.text }}
-                      </p>
-                  </div>
-                  <div class="flex justify-center lg:justify-start">
-                      <button @click.stop="handleProjectClick(item.href)" class="btn-primary inline-flex items-center text-sm md:text-lg px-6 py-2 md:px-8 md:py-3">
-                        <span>查看详情</span>
-                      </button>
+                    <div class="prose prose-invert prose-sm md:prose-lg max-w-none mb-6 md:mb-8 mx-auto lg:mx-0">
+                        <p class="text-gray-300 leading-relaxed text-base md:text-xl">
+                          {{ item.text }}
+                        </p>
+                    </div>
+                    <div class="flex justify-center lg:justify-start">
+                        <button @click.stop="handleProjectClick(item.href)" class="btn-primary inline-flex items-center text-sm md:text-lg px-6 py-2 md:px-8 md:py-3">
+                          <span>查看详情</span>
+                        </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -97,7 +96,7 @@
           </template>
 
           <!-- Type: About -->
-          <div v-else-if="slide.type === 'about'" class="slide-content-wrapper">
+          <div v-else-if="slide.type === 'about'" class="slide-content-wrapper" :style="{ background: slide.backgroundGradient || slide.backgroundColor }">
             <h2 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 text-white">{{ slide.title }}</h2>
             <div class="max-w-4xl mx-auto bg-gray-800/40 p-6 md:p-14 rounded-3xl backdrop-blur-md border border-gray-700/50 shadow-2xl mx-4">
               <p class="text-gray-200 text-base md:text-2xl leading-relaxed text-center md:text-left" v-html="slide.content"></p>
@@ -105,7 +104,7 @@
           </div>
 
           <!-- Type: Contact -->
-          <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper">
+          <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper" :style="{ background: slide.backgroundColor }">
             <h2 class="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-10">{{ slide.title }}</h2>
             <div class="flex justify-center gap-6 md:gap-8 mb-12 md:mb-16">
               <a v-for="(link, lIndex) in slide.socialLinks" :key="lIndex" :href="link.href" target="_blank" class="text-gray-400 hover:text-white transition transform hover:scale-110">
@@ -386,7 +385,7 @@ async function initReveal() {
             margin: mobile ? 0 : 0.04,
             minScale: mobile ? 1.0 : 0.2,
             maxScale: mobile ? 1.0 : 2.0,
-            disableLayout: true, // 始终禁用 Reveal.js 的默认布局，使用 CSS 控制，避免计算错误导致的死循环
+            disableLayout: mobile, // 移动端禁用缩放，完全靠 CSS
         });
 
         // 保存实例
@@ -467,23 +466,6 @@ async function initReveal() {
     background: transparent;
     border: none;
     box-shadow: none;
-}
-
-/* 强制 section 全屏，配合 disableLayout: true */
-:deep(.reveal .slides) {
-    height: 100% !important;
-    width: 100% !important;
-    text-align: center;
-}
-:deep(.reveal .slides > section) {
-    height: 100% !important;
-    width: 100% !important;
-    padding: 0 !important;
-    top: 0 !important;
-    display: flex !important;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 /* 自定义动画 */
