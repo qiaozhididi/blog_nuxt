@@ -11,6 +11,16 @@
       <p class="text-sm mt-2">{{ error }}</p>
     </div>
 
+    <!-- Debug Overlay (Temporary) -->
+    <div v-if="true" class="fixed top-0 left-0 z-50 bg-black/80 text-white p-4 text-xs font-mono max-w-md pointer-events-none">
+      <p>Path: {{ route.path }}</p>
+      <p>Pending: {{ pending }}</p>
+      <p>Error: {{ error }}</p>
+      <p>Config Loaded: {{ !!config }}</p>
+      <p>Slides Count: {{ config?.slides?.length }}</p>
+      <p>Data URL: {{ resolvePath('/data/site-config.json') }}</p>
+    </div>
+
     <!-- Reveal Content -->
     <div v-else class="reveal theme-font-montserrat h-full w-full" ref="revealContainer">
       <div class="slides">
