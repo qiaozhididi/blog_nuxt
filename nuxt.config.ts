@@ -4,13 +4,12 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/content'
   ],
-  content: {
-    highlight: {
-      theme: 'github-dark'
-    }
+  nitro: {
+    preset: 'github-pages'
   },
   css: ['~/assets/css/main.css'],
   app: {
+    baseURL: '/blog_nuxt/',
     head: {
       link: [
         {
