@@ -371,7 +371,7 @@ async function initReveal() {
         const deck = new Reveal(revealEl, {
             controls: true,
             progress: true,
-            center: true,
+            center: false, // 禁用垂直居中，让我们自己通过 CSS 控制布局
             hash: false, // 禁用默认 hash
             history: false, // 禁用默认 history，我们自己接管
             mouseWheel: true,
@@ -466,6 +466,30 @@ async function initReveal() {
     background: transparent;
     border: none;
     box-shadow: none;
+}
+
+/* 强制 section 全屏 */
+:deep(.reveal .slides) {
+    text-align: center;
+}
+:deep(.reveal .slides > section) {
+    height: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    top: 0 !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+  :deep(.reveal .slides) {
+      height: auto !important;
+      text-align: left;
+  }
+  :deep(.reveal .slides > section) {
+      height: auto !important;
+      min-height: 100vh;
+      margin-bottom: 0;
+  }
 }
 
 /* 自定义动画 */
