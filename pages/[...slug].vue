@@ -121,6 +121,11 @@
 
       </div>
     </div>
+    
+    <!-- Init Status (Debug) -->
+    <div class="fixed bottom-0 left-0 bg-white/10 text-white text-[10px] p-1 z-[9999] pointer-events-none">
+       Status: {{ initStatus }}
+    </div>
   </div>
 </template>
 
@@ -171,6 +176,7 @@ const { data: config, pending, error } = useFetch<any>(() => resolvePath('/data/
 
 let revealInstance: any = null;
 const revealContainer = ref<HTMLElement | null>(null);
+const initStatus = ref('Waiting...');
 
 // 处理路由更新（例如点击浏览器后退按钮）
 onBeforeRouteUpdate((to, from, next) => {
@@ -321,7 +327,23 @@ function handleMouseUp(e: MouseEvent) {
 }
 
 async function initReveal() {
+  initStatus.value = 'Starting init...';
   await nextTick();
+  
+  // Retry mechanism for DOM element availability
+  let retries = 0;
+  while (!revealContainer.value && retries < 20) {
+      initStatus.value = `Waiting for DOM (${retries})...`;
+      await new Promise(r => setTimeout(r, 100));
+      retries++;
+  }
+
+  if (!revealContainer.value) {
+      initStatus.value = 'Failed: No Container';
+      console.error('Reveal container not found');
+      return;
+  }
+  
   setTimeout(async () => {
     // 确保组件没有被卸载
     if (!revealContainer.value) return;
@@ -329,9 +351,12 @@ async function initReveal() {
     const revealEl = revealContainer.value;
     if (revealEl && !revealInstance) {
       try {
+        initStatus.value = 'Importing Reveal...';
         // Dynamic import for client-side only
         const Reveal = (await import('reveal.js')).default;
         const Markdown = (await import('reveal.js/plugin/markdown/markdown.esm.js')).default;
+
+        initStatus.value = 'Initializing Reveal...';
 
         // 根据当前路由计算初始 slide
         const slugArray = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug || 'home'];
@@ -366,6 +391,7 @@ async function initReveal() {
 
         // 初始化
         await deck.initialize();
+        initStatus.value = 'Ready';
         
         // Add mouse drag listeners
         document.addEventListener('mousedown', handleMouseDown);
@@ -388,6 +414,7 @@ async function initReveal() {
         });
 
       } catch (e) {
+        initStatus.value = 'Error: ' + (e instanceof Error ? e.message : String(e));
         console.error("Reveal initialization failed:", e);
       }
     }
