@@ -4,12 +4,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/content'
   ],
-  nitro: {
-    preset: 'github-pages'
-  },
   css: ['~/assets/css/main.css'],
   app: {
-    baseURL: '/blog_nuxt/',
     head: {
       link: [
         {
