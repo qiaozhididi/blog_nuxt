@@ -24,12 +24,12 @@
           
           <!-- Type: Hero -->
           <div v-if="slide.type === 'hero'" class="slide-content-wrapper">
-            <h1 class="text-3xl md:text-9xl font-black mb-6 md:mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl">
-              <span class="text-white">
+            <h1 class="!text-3xl md:!text-7xl font-black mb-6 md:mb-8 tracking-tight relative z-10 text-center drop-shadow-2xl px-4">
+              <span class="text-white break-words">
                 {{ slide.title }}
               </span>
             </h1>
-            <p class="text-base md:text-4xl text-gray-200 mb-8 md:mb-12 relative z-10 fragment fade-up text-center font-light tracking-wide px-4">
+            <p class="text-sm md:text-2xl text-gray-200 mb-8 md:mb-12 relative z-10 fragment fade-up text-center font-light tracking-wide px-4">
               {{ slide.subtitle }}
             </p>
             <div v-if="slide.actionButton" class="relative z-10 fragment fade-up">
@@ -64,9 +64,9 @@
               style="background: #1f2937"
             >
               <div class="slide-content-wrapper">
-                <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 h-full w-full overflow-y-auto">
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-16 max-w-7xl mx-auto p-4 w-full min-h-screen lg:h-full lg:overflow-hidden">
                   <!-- Image Side -->
-                  <div class="w-full lg:w-1/2 flex justify-center items-center shrink-0">
+                  <div class="w-full lg:flex-1 flex justify-center items-center min-w-0">
                      <div class="relative group w-full max-w-[280px] md:max-w-md">
                        <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                        <img :src="resolvePath(item.image)" :alt="item.title" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
@@ -74,7 +74,7 @@
                   </div>
                   
                   <!-- Content Side -->
-                  <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center shrink-0">
+                  <div class="w-full lg:flex-1 text-center lg:text-left flex flex-col justify-center min-w-0">
                     <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-4 mb-4 md:mb-6">
                       <div class="p-2 md:p-3 bg-gray-800 rounded-full shadow-lg">
                           <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400"></i>
@@ -382,12 +382,12 @@ async function initReveal() {
             touch: true,
             controlsTutorial: false,
             // Mobile Optimization
-            width: mobile ? window.innerWidth : 960,
-            height: mobile ? window.innerHeight : 700,
-            margin: mobile ? 0 : 0.04,
-            minScale: mobile ? 1.0 : 0.2,
-            maxScale: mobile ? 1.0 : 2.0,
-            disableLayout: mobile, // 移动端禁用缩放，完全靠 CSS
+            width: "100%",
+            height: "100%",
+            margin: 0,
+            minScale: 1.0,
+            maxScale: 1.0,
+            disableLayout: true, // 彻底禁用 Reveal 的尺寸计算，完全交给 CSS
         });
 
         // 保存实例
@@ -456,7 +456,7 @@ async function initReveal() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   position: relative;
   z-index: 10;
@@ -473,19 +473,41 @@ async function initReveal() {
 /* 强制 section 全屏 */
 :deep(.reveal .slides) {
     text-align: center;
+    width: 100vw !important;
+    height: 100vh !important;
+    left: 0 !important;
+    top: 0 !important;
+    margin: 0 !important;
+    transform: none !important; /* 禁用缩放，强制占满 */
 }
 :deep(.reveal .slides > section) {
-    height: 100% !important;
-    width: 100% !important;
+    height: 100vh !important;
+    width: 100vw !important;
     padding: 0 !important;
     top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    max-width: none !important; /* 覆盖 Reveal 默认的最大宽度限制 */
+}
+/* 修复 vertical stack 中的子 section */
+:deep(.reveal .slides > section > section) {
+    height: 100vh !important;
+    width: 100vw !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
 }
 
 /* 移动端适配 */
 @media (max-width: 767px) {
+  :deep(.reveal) {
+      overflow-y: auto !important;
+  }
   :deep(.reveal .slides) {
       height: auto !important;
       text-align: left;
+      overflow: visible !important;
   }
   :deep(.reveal .slides > section) {
       height: auto !important;
