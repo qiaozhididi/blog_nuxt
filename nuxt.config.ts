@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-02-03',
+  // Trigger new build
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/content'
