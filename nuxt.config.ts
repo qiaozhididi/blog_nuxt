@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  compatibilityDate: '2026-02-03',
+  compatibilityDate: '2026-02-07',
   // Trigger new build
   modules: [
     '@nuxtjs/tailwindcss',
