@@ -1,10 +1,8 @@
 ---
-title: Hello Obsidian
-description: This is a sample post from Obsidian.
-date: 2023-10-27
+title: 项目简介
+description: 本项目是一个基于 Obsidian 的知识管理与博客发布模板，旨在帮助用户将 Obsidian 中的笔记快速转换为可发布的博客文章。
+date: 2026-02-20
 ---
-
-# Hello Obsidian
 
 # 项目综合介绍
 
