@@ -7,6 +7,8 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/css/main.css'],
   app: {
+    // 在 GitHub Pages 上部署时使用 /blog_nuxt/，其他环境（如 Vercel、本地）使用 /
+    baseURL: process.env.GITHUB_ACTIONS ? '/blog_nuxt/' : '/',
     head: {
       link: [
         {
