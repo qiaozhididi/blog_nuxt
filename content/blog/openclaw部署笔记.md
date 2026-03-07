@@ -31,3 +31,20 @@ node --version  # 应显示 v22.x.x 或更高
 brew install ollama
 ```
 
+#### 安装 OpenClaw 
+
+##### 方式一：一键脚本（推荐）
+```
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+##### 方式二：npm 全局安装
+```
+npm install -g openclaw@latest
+npm install -g openclaw
+```
+
+#### 运行配置向导
+```
+openclaw onboard --install-daemon
+```
