@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  compatibilityDate: '2026-02-07',
+  compatibilityDate: '2026-07-20',
   // Trigger new build
   modules: [
     '@nuxtjs/tailwindcss',
@@ -18,4 +18,4 @@ export default defineNuxtConfig({
       ],
     },
   },
-});// timestamp 2026年 2月 7日 星期六 18时22分27秒 CST
+});
