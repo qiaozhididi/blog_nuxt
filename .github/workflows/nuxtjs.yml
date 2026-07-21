@@ -53,12 +53,12 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          # Automatically inject router.base in your Nuxt configuration file and set
-          # target to static (https://nuxtjs.org/docs/configuration-glossary/configuration-target/).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: nuxt
+        # 不使用 static_site_generator: nuxt 参数：
+        # 该参数是 Nuxt 2 时代的配置，会通过 ConfigParser 在仓库中创建/修改 nuxt.config.js
+        # 来注入 router.base 和 target: 'static'。但本项目使用 nuxt.config.ts，
+        # configure-pages 检测不到 .js 文件时会创建一个空白 nuxt.config.js 覆盖 .ts，
+        # 导致 modules、css 等配置全部丢失，Tailwind 模块不加载，页面样式失效。
+        # Nuxt 3 通过 NUXT_APP_BASE_URL 环境变量（见下方 env）设置 baseURL 即可。
       - name: Restore cache
         uses: actions/cache@v4
         with:
