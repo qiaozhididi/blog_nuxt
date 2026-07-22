@@ -431,25 +431,6 @@ async function initReveal() {
 </script>
 
 <style scoped>
-/* 按钮基础样式规范 */
-.btn-primary {
-  @apply px-8 py-3 rounded-full font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 inline-block;
-  /* 使用高亮背景和深色文字，确保对比度 */
-  background-color: white;
-  color: #0f172a !important; /* 强制覆盖 Reveal.js 的链接颜色 */
-  box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.39);
-  position: relative;
-  z-index: 50;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  @apply bg-gray-100;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.23);
-  color: #000000 !important;
-}
-
 /* 使用自定义类来控制内容居中，避免全局覆盖 section 导致 Reveal 计算错误 */
 .slide-content-wrapper {
   display: flex;
