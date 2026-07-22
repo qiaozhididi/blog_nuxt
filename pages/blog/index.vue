@@ -52,6 +52,10 @@ const { data: list, pending, error } = await useAsyncData('blog-list', async () 
   return all.filter(article => !article.path.split('/').pop().startsWith('.'));
 });
 
+useHead({
+  title: '博客',
+});
+
 definePageMeta({
   key: 'blog-list',
 });

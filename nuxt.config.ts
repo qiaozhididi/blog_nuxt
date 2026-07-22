@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     // baseURL 由 Nuxt 自动从 NUXT_APP_BASE_URL 环境变量读取
     // CI 中设置 NUXT_APP_BASE_URL=/blog_nuxt/，本地未设置时默认 /
     head: {
+      title: '乔治弟弟_Blog',
+      titleTemplate: (title?: string) => title ? `${title} - 乔治弟弟_Blog` : '乔治弟弟_Blog',
       link: [
         {
           rel: "stylesheet",

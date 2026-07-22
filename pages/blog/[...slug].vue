@@ -31,6 +31,11 @@ const route = useRoute();
 // 获取当前路径对应的文章内容
 const { data } = await useAsyncData('page-data', () => queryCollection('blog').path(route.path).first());
 
+// 动态设置页面标题为文章标题
+useHead(() => ({
+  title: data.value?.title || '文章',
+}));
+
 definePageMeta({
   key: 'blog-detail',
 });
