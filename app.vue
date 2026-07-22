@@ -13,7 +13,6 @@
 html, body, #__nuxt {
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
 /* 全局滚动条样式优化 (仅用于Reveal内部滚动内容) */
