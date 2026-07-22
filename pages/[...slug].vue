@@ -118,11 +118,22 @@
             </p>
           </div>
 
+          <!-- 首屏翻页提示（仅第一张幻灯片显示） -->
+          <div v-if="index === 0" class="slide-nav-hint">
+            <span class="hidden md:inline">向右探索</span>
+            <i class="fa fa-arrow-right"></i>
+          </div>
+
         </section>
 
       </div>
     </div>
-    
+
+    <!-- 移动端页面指示器（桌面端隐藏） -->
+    <div v-if="config" class="mobile-page-indicator md:hidden">
+      {{ currentIndex + 1 }} / {{ config.slides.length }}
+    </div>
+
   </div>
 </template>
 
@@ -174,6 +185,7 @@ const { data: config, pending, error } = useFetch<any>(() => resolvePath('/data/
 let revealInstance: any = null;
 const revealContainer = ref<HTMLElement | null>(null);
 const initStatus = ref('Waiting...');
+const currentIndex = ref(0);
 
 // 处理路由更新（例如点击浏览器后退按钮）
 onBeforeRouteUpdate((to, from, next) => {
@@ -408,9 +420,11 @@ async function initReveal() {
 
         // 跳转到初始页面
         deck.slide(h, v);
+        currentIndex.value = h;
 
         // 监听切换事件，更新 URL
         deck.on('slidechanged', (event: any) => {
+            currentIndex.value = event.indexh;
             const h = event.indexh;
             const v = event.indexv;
             const newPath = getPathFromIndices(h, v);
@@ -480,10 +494,23 @@ async function initReveal() {
     margin: 0 !important;
 }
 
+/* 桌面端 Reveal controls 增强 */
+:deep(.reveal .controls) {
+  font-size: 24px;
+}
+:deep(.reveal .controls button) {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+:deep(.reveal .controls button:hover) {
+  opacity: 1;
+}
+
 /* 移动端适配 */
 @media (max-width: 767px) {
   :deep(.reveal) {
       overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
   }
   :deep(.reveal .slides) {
       height: auto !important;
@@ -495,6 +522,52 @@ async function initReveal() {
       min-height: 100vh;
       margin-bottom: 0;
   }
+  /* 移动端隐藏 Reveal 默认 controls（太小难点击，用底部指示器替代） */
+  :deep(.reveal .controls) {
+      display: none !important;
+  }
+  /* 移动端隐藏首屏翻页提示（用指示器替代） */
+  .slide-nav-hint {
+      display: none !important;
+  }
+}
+
+/* 首屏翻页提示 */
+.slide-nav-hint {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 20;
+  pointer-events: none;
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(4px); }
+}
+
+/* 移动端页面指示器 */
+.mobile-page-indicator {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
 }
 
 /* 自定义动画 */
