@@ -1,18 +1,7 @@
 <template>
   <div class="h-screen w-full bg-black text-white overflow-hidden">
-    <!-- Loading State -->
-    <div v-if="pending || !config" class="flex items-center justify-center h-full">
-      <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="flex flex-col items-center justify-center h-full text-red-500">
-      <p class="text-xl">无法加载配置</p>
-      <p class="text-sm mt-2">{{ error }}</p>
-    </div>
-
-    <!-- Reveal Content -->
-    <div v-else class="reveal theme-font-montserrat h-full w-full" ref="revealContainer">
+    <!-- Reveal Content：SSR 即渲染幻灯片结构，利于 SEO -->
+    <div class="reveal theme-font-montserrat h-full w-full" ref="revealContainer">
       <div class="slides">
         
         <section 
@@ -129,6 +118,15 @@
       </div>
     </div>
 
+    <!-- Reveal 客户端初始化前的遮罩：初始化完成或失败后移除 -->
+    <div v-if="!revealReady" class="fixed inset-0 flex items-center justify-center bg-black z-50">
+      <div v-if="initError" class="text-center px-4">
+        <p class="text-red-500 text-xl mb-2">幻灯片加载失败</p>
+        <p class="text-gray-400 text-sm break-all">{{ initError }}</p>
+      </div>
+      <div v-else class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
+    </div>
+
     <!-- 移动端页面指示器（桌面端隐藏） -->
     <div v-if="config" class="mobile-page-indicator md:hidden">
       {{ currentIndex + 1 }} / {{ config.slides.length }}
@@ -144,6 +142,10 @@ import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 // Import Reveal styles
 import 'reveal.js/dist/reveal.css';
 import 'reveal.js/dist/theme/black.css';
+
+// 静态导入站点配置：SSG 下 useFetch 会因 baseURL 前缀在服务端取数据 404，
+// 静态导入使 SSR/预渲染即可获得幻灯片数据（SEO + 无首屏 loading 闪烁）
+import siteConfig from '~/data/site-config.json';
 
 const route = useRoute();
 const router = useRouter();
@@ -175,12 +177,12 @@ function resolvePath(path: string) {
   return path;
 }
 
-// 使用 Nuxt 的 useFetch 来获取数据
-const { data: config, pending, error } = useFetch<any>(() => resolvePath('/data/site-config.json'), {
-  key: 'site-config', // 固定的 key，防止路由切换时重新请求导致闪烁
-  server: false, // 强制在客户端获取，因为 Reveal.js 是纯客户端库
-  lazy: true
-});
+// 站点配置通过文件顶部静态导入获取，无需运行时 fetch
+const config = ref(siteConfig);
+// Reveal.js 客户端初始化状态：完成前显示 loading 遮罩。
+// 幻灯片结构在 SSR 即渲染（保证 SEO），客户端初始化完成后移除遮罩避免裸露堆叠闪烁。
+const revealReady = ref(false);
+const initError = ref<string | null>(null);
 
 let revealInstance: any = null;
 const revealContainer = ref<HTMLElement | null>(null);
@@ -341,7 +343,7 @@ async function initReveal() {
   }
 
   if (!revealContainer.value) {
-      console.error('Reveal container not found');
+      initError.value = 'Reveal 容器未就绪';
       return;
   }
   
@@ -359,6 +361,7 @@ async function initReveal() {
         // Check sections count
         const sectionCount = revealEl.querySelectorAll('.slides > section').length;
         if (sectionCount === 0) {
+             initError.value = '未找到幻灯片内容';
              return;
         }
 
@@ -417,8 +420,11 @@ async function initReveal() {
             }
         });
 
+        // Reveal 初始化完成，移除 loading 遮罩
+        revealReady.value = true;
       } catch (e) {
         console.error("Reveal initialization failed:", e);
+        initError.value = e instanceof Error ? e.message : String(e);
       }
     }
   }, 100);
