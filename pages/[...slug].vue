@@ -217,6 +217,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
   if (revealInstance) {
+    // 必须调用 destroy() 清理 Reveal 绑定在 document 上的事件监听
+    // （wheel/keydown/mousedown 等 9 个），否则 SPA 导航到其他页面后
+    // 残留监听会捕获滚轮事件并触发 router.replace 跳回 PPT 页面
+    revealInstance.destroy();
     revealInstance = null;
   }
   document.removeEventListener('mousedown', handleMouseDown);
