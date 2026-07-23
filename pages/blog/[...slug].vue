@@ -32,6 +32,11 @@ const route = useRoute();
 // 确保 SPA 切换文章时重新获取对应内容，而非复用上一篇缓存
 const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollection('blog').path(route.path).first());
 
+// 文章不存在时抛 404，避免返回 200 + 占位文本（SEO/UX）
+if (!data.value) {
+  throw createError({ statusCode: 404, statusMessage: '文章不存在', fatal: true });
+}
+
 // 动态设置页面标题为文章标题
 useHead(() => ({
   title: data.value?.title || '文章',
