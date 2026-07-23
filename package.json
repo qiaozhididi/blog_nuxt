@@ -19,11 +19,13 @@
   "devDependencies": {
     "@nuxt/content": "^3.15.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^25.3.0",
     "autoprefixer": "^10.4.24",
     "postcss": "^8.5.6",
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
-    "tailwindcss": "^3.4.19"
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.1.5"
   }
 }
