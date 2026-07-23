@@ -45,10 +45,8 @@
 </template>
 
 <script setup>
-const { data: list, pending, error } = await useAsyncData('blog-list', async () => {
-  const all = await queryCollection('blog').all();
-  return all.filter(article => !article.path.split('/').pop().startsWith('.'));
-});
+// 点文件已由 content.config.ts 的 source glob（[!.]*.md）排除，无需再过滤
+const { data: list, pending, error } = await useAsyncData('blog-list', () => queryCollection('blog').all());
 
 useHead({
   title: '博客',
