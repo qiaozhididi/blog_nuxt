@@ -15,6 +15,9 @@ export default defineNuxtConfig({
         {
           rel: "stylesheet",
           href: "https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css",
+          crossorigin: "anonymous",
+          // SRI 完整性校验：CDN 内容被篡改时浏览器拒绝加载，防 XSS
+          integrity: "sha384-FckWOBo7yuyMS7In0aXZ0aoVvnInlnFMwCv77x9sZpFgOonQgnBj1uLwenWVtsEj",
         },
       ],
     },
