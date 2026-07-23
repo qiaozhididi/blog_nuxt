@@ -184,7 +184,6 @@ const { data: config, pending, error } = useFetch<any>(() => resolvePath('/data/
 
 let revealInstance: any = null;
 const revealContainer = ref<HTMLElement | null>(null);
-const initStatus = ref('Waiting...');
 const currentIndex = ref(0);
 
 // 处理路由更新（例如点击浏览器后退按钮）
@@ -340,19 +339,16 @@ function handleMouseUp(e: MouseEvent) {
 }
 
 async function initReveal() {
-  initStatus.value = 'Starting init...';
   await nextTick();
   
   // Retry mechanism for DOM element availability
   let retries = 0;
   while (!revealContainer.value && retries < 20) {
-      initStatus.value = `Waiting for DOM (${retries})...`;
       await new Promise(r => setTimeout(r, 100));
       retries++;
   }
 
   if (!revealContainer.value) {
-      initStatus.value = 'Failed: No Container';
       console.error('Reveal container not found');
       return;
   }
@@ -364,17 +360,13 @@ async function initReveal() {
     const revealEl = revealContainer.value;
     if (revealEl && !revealInstance) {
       try {
-        initStatus.value = 'Importing Reveal...';
         // Dynamic import for client-side only
         const Reveal = (await import('reveal.js')).default;
         const Markdown = (await import('reveal.js/plugin/markdown/markdown.esm.js')).default;
 
-        initStatus.value = 'Initializing Reveal...';
-
         // Check sections count
         const sectionCount = revealEl.querySelectorAll('.slides > section').length;
         if (sectionCount === 0) {
-             initStatus.value = 'Error: No sections found in DOM';
              return;
         }
 
@@ -415,8 +407,6 @@ async function initReveal() {
         // Force layout update
         deck.layout();
         
-        initStatus.value = `Ready (${sectionCount} slides, target: ${h}/${v})`;
-        
         // Add mouse drag listeners
         document.addEventListener('mousedown', handleMouseDown);
         document.addEventListener('mousemove', handleMouseMove);
@@ -440,7 +430,6 @@ async function initReveal() {
         });
 
       } catch (e) {
-        initStatus.value = 'Error: ' + (e instanceof Error ? e.message : String(e));
         console.error("Reveal initialization failed:", e);
       }
     }
