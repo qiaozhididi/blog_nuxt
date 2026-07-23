@@ -27,7 +27,7 @@
               v-for="article in list" 
               :key="article.path" 
               :to="article.path"
-              class="block p-6 bg-gray-800 rounded-xl hover:bg-gray-750 transition transform hover:-translate-y-1 hover:shadow-xl border border-gray-700"
+              class="block p-6 bg-gray-800 rounded-xl hover:bg-gray-700 transition transform hover:-translate-y-1 hover:shadow-xl border border-gray-700"
             >
               <h2 class="text-2xl font-bold mb-2 text-white">{{ article.title || article.path }}</h2>
               <p class="text-gray-400 mb-4">{{ article.description || '暂无描述' }}</p>
