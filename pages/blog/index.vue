@@ -45,8 +45,6 @@
 </template>
 
 <script setup>
-console.log('Blog list page loaded');
-
 const { data: list, pending, error } = await useAsyncData('blog-list', async () => {
   const all = await queryCollection('blog').all();
   return all.filter(article => !article.path.split('/').pop().startsWith('.'));

@@ -156,12 +156,10 @@ definePageMeta({
 });
 
 function handleHeroButtonClick(link: string) {
-  console.log('Hero button clicked:', link);
   router.push(link);
 }
 
 function handleProjectClick(href: string) {
-  console.log('Project button clicked:', href);
   if (href.startsWith('/') && !href.startsWith('//')) {
     router.push(href);
   } else {
