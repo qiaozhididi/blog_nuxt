@@ -223,7 +223,6 @@ onUnmounted(() => {
     revealInstance = null;
   }
   document.removeEventListener('mousedown', handleMouseDown);
-  document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mouseup', handleMouseUp);
 });
 
@@ -300,11 +299,6 @@ function handleMouseDown(e: MouseEvent) {
   startX = e.clientX;
   startY = e.clientY;
   isDragging = true;
-}
-
-function handleMouseMove(e: MouseEvent) {
-  if (!isDragging) return;
-  // e.preventDefault(); // Prevent text selection
 }
 
 function handleMouseUp(e: MouseEvent) {
@@ -404,7 +398,6 @@ async function initReveal() {
         
         // Add mouse drag listeners
         document.addEventListener('mousedown', handleMouseDown);
-        document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
 
         // 跳转到初始页面
