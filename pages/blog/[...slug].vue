@@ -28,17 +28,14 @@
 
 <script setup>
 const route = useRoute();
-// 获取当前路径对应的文章内容
-const { data } = await useAsyncData('page-data', () => queryCollection('blog').path(route.path).first());
+// key 随路由变化，配合组件按路由 remount（见下方已移除静态 definePageMeta key），
+// 确保 SPA 切换文章时重新获取对应内容，而非复用上一篇缓存
+const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollection('blog').path(route.path).first());
 
 // 动态设置页面标题为文章标题
 useHead(() => ({
   title: data.value?.title || '文章',
 }));
-
-definePageMeta({
-  key: 'blog-detail',
-});
 </script>
 
 <style>
