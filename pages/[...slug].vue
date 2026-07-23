@@ -287,8 +287,6 @@ function getPathFromIndices(h: number, v: number) {
   return rootSlug === 'home' ? '/' : `/${rootSlug}`;
 }
 
-const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
-
 // Variables for drag handling
 let startX = 0;
 let startY = 0;
@@ -373,9 +371,6 @@ async function initReveal() {
         // 根据当前路由计算初始 slide
         const slugArray = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug || 'home'];
         const { h, v } = getIndicesFromSlug(slugArray as string[]);
-
-        // Check mobile
-        const mobile = window.innerWidth < 768;
 
         // 初始化 Reveal 实例
         const deck = new Reveal(revealEl, {
