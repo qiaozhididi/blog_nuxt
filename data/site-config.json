@@ -62,10 +62,12 @@
       "socialLinks": [
         {
           "icon": "fa fa-github",
+          "name": "GitHub",
           "href": "https://github.com/qiaozhididi"
         },
         {
           "icon": "fa fa-envelope",
+          "name": "邮箱",
           "href": "mailto:qzfrato@163.com"
         }
       ],

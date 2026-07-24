@@ -40,7 +40,7 @@
                   {{ slide.cover.subtitle }}
                 </p>
                 <div class="mt-8 md:mt-12 animate-bounce text-gray-500">
-                  <i class="fa fa-chevron-down text-2xl md:text-3xl"></i>
+                  <i class="fa fa-chevron-down text-2xl md:text-3xl" aria-hidden="true"></i>
                 </div>
               </div>
             </section>
@@ -66,7 +66,7 @@
                   <div class="w-full lg:flex-1 text-center lg:text-left flex flex-col justify-center min-w-0">
                     <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-4 mb-4 md:mb-6">
                       <div class="p-2 md:p-3 bg-gray-800 rounded-full shadow-lg">
-                          <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400"></i>
+                          <i :class="item.icon" class="text-2xl md:text-3xl text-purple-400" aria-hidden="true"></i>
                       </div>
                       <h3 class="text-2xl md:text-4xl font-bold text-white">{{ item.title }}</h3>
                     </div>
@@ -98,8 +98,8 @@
           <div v-else-if="slide.type === 'contact'" class="slide-content-wrapper">
             <h2 class="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-10">{{ slide.title }}</h2>
             <div class="flex justify-center gap-6 md:gap-8 mb-12 md:mb-16">
-              <a v-for="(link, lIndex) in slide.socialLinks" :key="lIndex" :href="link.href" target="_blank" class="text-gray-400 hover:text-white transition transform hover:scale-110">
-                <i :class="link.icon" class="text-4xl md:text-5xl"></i>
+              <a v-for="(link, lIndex) in slide.socialLinks" :key="lIndex" :href="link.href" :aria-label="link.name" target="_blank" class="text-gray-400 hover:text-white transition transform hover:scale-110">
+                <i :class="link.icon" class="text-4xl md:text-5xl" aria-hidden="true"></i>
               </a>
             </div>
             <p class="text-gray-500 text-xs md:text-base font-medium">
@@ -110,7 +110,7 @@
           <!-- 首屏翻页提示（仅第一张幻灯片显示） -->
           <div v-if="index === 0" class="slide-nav-hint">
             <span class="hidden md:inline">向右探索</span>
-            <i class="fa fa-arrow-right"></i>
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
           </div>
 
         </section>
