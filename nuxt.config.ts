@@ -5,6 +5,13 @@ export default defineNuxtConfig({
     '@nuxt/content'
   ],
   css: ['~/assets/css/main.css'],
+  nitro: {
+    prerender: {
+      // SSG 预渲染 sitemap.xml 为静态文件：GitHub Pages 为纯静态托管，
+      // 无法运行 server route，必须显式预渲染生成 .output/public/sitemap.xml
+      routes: ['/sitemap.xml'],
+    },
+  },
   app: {
     // baseURL 由 Nuxt 自动从 NUXT_APP_BASE_URL 环境变量读取
     // CI 中设置 NUXT_APP_BASE_URL=/blog_nuxt/，本地未设置时默认 /
