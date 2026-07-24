@@ -37,9 +37,12 @@ if (!data.value) {
   throw createError({ statusCode: 404, statusMessage: '文章不存在', fatal: true });
 }
 
-// 动态设置页面标题为文章标题
+// 动态设置页面标题与描述（取自文章 frontmatter，缺失时兜底）
 useHead(() => ({
   title: data.value?.title || '文章',
+  meta: [
+    { name: 'description', content: data.value?.description || '乔治弟弟的博客文章' },
+  ],
 }));
 </script>
 
