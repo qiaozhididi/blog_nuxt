@@ -1,3 +1,9 @@
+---
+title: AI Canvas Flow 技术文档与面试题
+description: AI 视频工作流编排平台的技术文档，涵盖可视化画布、AI 多模态推理、实时协作与时间轴编排等核心能力。
+date: 2026-07-20
+---
+
 # AI Canvas Flow 技术文档与面试题
 
 ---

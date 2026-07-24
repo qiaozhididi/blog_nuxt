@@ -1,3 +1,9 @@
+---
+title: 寰通Talk AI销售助手 — 面试题与答案
+description: 基于寰通 Talk AI 销售助手项目实际技术栈的面试题集，涵盖 RAG、LangChain/LangGraph、记忆系统与系统设计等核心主题。
+date: 2026-07-20
+---
+
 # 寰通Talk AI销售助手 — 面试题与答案
 
 > 基于项目实际技术栈和架构设计，涵盖 RAG、LangChain/LangGraph、记忆系统、Prompt 工程、系统设计等核心主题。

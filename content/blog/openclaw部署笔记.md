@@ -1,3 +1,9 @@
+---
+title: OpenClaw 部署技术手册（Mac Mini M4）
+description: OpenClaw 在 Mac Mini M4（Apple Silicon）上的部署技术手册，适用于 macOS 15.6 环境。
+date: 2026-03-06
+---
+
 # OpenClaw 部署技术手册（Mac Mini M4）
 
 https://openclaws.io/zh/
