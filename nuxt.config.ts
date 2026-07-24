@@ -9,8 +9,9 @@ export default defineNuxtConfig({
     // baseURL 由 Nuxt 自动从 NUXT_APP_BASE_URL 环境变量读取
     // CI 中设置 NUXT_APP_BASE_URL=/blog_nuxt/，本地未设置时默认 /
     head: {
-      title: '乔治弟弟_Blog',
-      titleTemplate: (title?: string) => title ? `${title} - 乔治弟弟_Blog` : '乔治弟弟_Blog',
+      // title 与 titleTemplate 移至 app.vue 的 useHead：
+      // nuxt.config 的 app.head 类型为可序列化形式，titleTemplate 仅支持 string，
+      // 而条件格式化需函数形式，故改在运行时 useHead 设置
       link: [
         {
           rel: "stylesheet",
