@@ -42,6 +42,14 @@ useHead(() => ({
   title: data.value?.title || '文章',
   meta: [
     { name: 'description', content: data.value?.description || '乔治弟弟的博客文章' },
+    // 文章页 OG 类型为 article，覆盖全局 website
+    { property: 'og:type', content: 'article' },
+    { property: 'og:title', content: data.value?.title || '文章' },
+    { property: 'og:description', content: data.value?.description || '乔治弟弟的博客文章' },
+    // published_time 用 ISO 格式，兼容 frontmatter 中 string/Date 两种情况
+    ...(data.value?.date
+      ? [{ property: 'article:published_time', content: new Date(data.value.date).toISOString() }]
+      : []),
   ],
 }));
 </script>

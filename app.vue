@@ -1,10 +1,31 @@
 <script setup lang="ts">
-// 标题模板需为函数形式（条件格式化），而 nuxt.config 的 app.head 类型为
-// 可序列化形式（titleTemplate 仅支持 string），故在运行时 useHead 中设置。
-// 仅设 titleTemplate：有子页面标题则加后缀，无标题（首页）时由 else 分支返回默认标题
-useHead({
-  titleTemplate: (title?: string) => title ? `${title} - 乔治弟弟_Blog` : '乔治弟弟_Blog',
-});
+// 站点级常量：部署在 GitHub Pages 子路径 /blog_nuxt/
+const SITE_URL = 'https://qzfrato.github.io/blog_nuxt'
+const SITE_NAME = '乔治弟弟_Blog'
+// 默认社交分享图：暂用现有大图占位，建议后续替换为 1200x630 专用 OG 图
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/CodePen.png`
+
+const route = useRoute()
+
+// 全局头部：lang、canonical、默认 OG/Twitter Card。
+// - canonical 随 route.path 动态变化，避免子路径部署产生的重复内容问题
+// - 各页面 useHead 覆盖 og:title/og:description/og:type 等特定字段
+useHead(() => ({
+  htmlAttrs: { lang: 'zh-CN' },
+  // 标题模板：有子页面标题则加后缀，首页（无标题）由 else 分支返回默认站点名
+  titleTemplate: (title?: string) => title ? `${title} - ${SITE_NAME}` : SITE_NAME,
+  link: [
+    { rel: 'canonical', href: `${SITE_URL}${route.path}` },
+  ],
+  meta: [
+    { property: 'og:site_name', content: SITE_NAME },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: `${SITE_URL}${route.path}` },
+    { property: 'og:image', content: DEFAULT_OG_IMAGE },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:image', content: DEFAULT_OG_IMAGE },
+  ],
+}))
 </script>
 
 <template>

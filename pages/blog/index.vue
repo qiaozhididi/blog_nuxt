@@ -50,6 +50,10 @@ const { data: list, pending, error } = await useAsyncData('blog-list', () => que
 
 useHead({
   title: '博客',
+  meta: [
+    { property: 'og:title', content: '博客' },
+    { property: 'og:description', content: '乔治弟弟的 Obsidian 笔记库' },
+  ],
 });
 
 definePageMeta({

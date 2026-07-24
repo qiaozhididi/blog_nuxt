@@ -155,6 +155,14 @@ definePageMeta({
   pageTransition: false, // 禁用页面过渡，避免 Reveal.js DOM 冲突
 });
 
+// 首页社交分享元信息：覆盖全局默认的 og:title/og:description
+useHead({
+  meta: [
+    { property: 'og:title', content: '乔治弟弟_Blog' },
+    { property: 'og:description', content: '探索代码的无限可能' },
+  ],
+})
+
 function handleHeroButtonClick(link: string) {
   router.push(link);
 }
