@@ -8,12 +8,12 @@ export default defineEventHandler(async (event) => {
 
   const articles = await queryCollection(event, 'blog').all()
 
+  // 仅收录有独立预渲染 HTML 的路由：
+  // /projects、/about、/contact 是首页 SPA 内部幻灯片路由，无独立 HTML，
+  // GitHub Pages 直接访问会 404，收录反而损害 SEO，故排除。
   const urls = [
     { loc: '/', priority: '1.0', changefreq: 'monthly' },
     { loc: '/blog', priority: '0.9', changefreq: 'weekly' },
-    { loc: '/projects', priority: '0.8', changefreq: 'monthly' },
-    { loc: '/about', priority: '0.6', changefreq: 'yearly' },
-    { loc: '/contact', priority: '0.5', changefreq: 'yearly' },
     ...articles.map((a) => ({ loc: a.path, priority: '0.7', changefreq: 'monthly' })),
   ]
 
