@@ -31,13 +31,13 @@
           <!-- Type: Projects (Vertical Stack) -->
           <template v-else-if="slide.type === 'projects'">
             <!-- Cover Slide -->
-            <section :data-slug="slide.cover.slug" :style="{ background: slide.cover.backgroundColor || '#111827' }">
+            <section :data-slug="slide.cover?.slug" :style="{ background: slide.cover?.backgroundColor || '#111827' }">
               <div class="slide-content-wrapper">
                 <h2 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-6 md:mb-8 text-center">
-                  {{ slide.cover.title }}
+                  {{ slide.cover?.title }}
                 </h2>
                 <p class="text-lg md:text-xl text-gray-400 text-center px-4">
-                  {{ slide.cover.subtitle }}
+                  {{ slide.cover?.subtitle }}
                 </p>
                 <div class="mt-8 md:mt-12 animate-bounce text-gray-500">
                   <i class="fa fa-chevron-down text-2xl md:text-3xl" aria-hidden="true"></i>
