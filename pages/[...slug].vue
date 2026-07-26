@@ -58,7 +58,7 @@
                   <div class="w-full lg:flex-1 flex justify-center items-center min-w-0">
                      <div class="relative group w-full max-w-[280px] md:max-w-md">
                        <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                       <img :src="resolvePath(item.image)" :alt="item.title" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
+                       <img :src="resolvePath(item.image)" :alt="item.title" loading="lazy" decoding="async" class="relative w-full rounded-xl shadow-2xl object-cover transform transition duration-500 hover:scale-[1.02]" />
                      </div>
                   </div>
                   
