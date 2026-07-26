@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://qiaozhididi.github.io/blog_nuxt/sitemap.xml
+Sitemap: https://qzfrato.github.io/blog_nuxt/sitemap.xml

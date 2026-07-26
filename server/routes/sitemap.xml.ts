@@ -4,7 +4,8 @@ import { queryCollection } from '@nuxt/content/server'
 // 新增文章无需手动维护。
 export default defineEventHandler(async (event) => {
   // 部署在 GitHub Pages 子路径 /blog_nuxt/，绝对 URL 用于 sitemap 规范
-  const base = 'https://qiaozhididi.github.io/blog_nuxt'
+  // 域名需与 app.vue 的 SITE_URL 保持一致，否则 sitemap 收录的 URL 会指向错误站点
+  const base = 'https://qzfrato.github.io/blog_nuxt'
 
   const articles = await queryCollection(event, 'blog').all()
 

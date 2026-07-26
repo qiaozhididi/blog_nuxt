@@ -64,7 +64,7 @@ NUXT_APP_BASE_URL=/blog_nuxt/ NITRO_PRESET=github-pages npm run generate
 
 - 推送到 `master` 分支即触发部署
 - CI 中设置 `NUXT_APP_BASE_URL=/blog_nuxt/` 以匹配 GitHub Pages 子路径
-- 部署 URL: `https://qiaozhididi.github.io/blog_nuxt/`
+- 部署 URL: `https://qzfrato.github.io/blog_nuxt/`
 
 ## 🎨 样式
 
