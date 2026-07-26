@@ -16,6 +16,8 @@ useHead(() => ({
   titleTemplate: (title?: string) => title ? `${title} - ${SITE_NAME}` : SITE_NAME,
   link: [
     { rel: 'canonical', href: `${SITE_URL}${route.path}` },
+    // RSS 自动发现：让 RSS 阅读器（Feedly、Inoreader 等）从任意页面发现订阅源
+    { rel: 'alternate', type: 'application/rss+xml', title: SITE_NAME, href: `${SITE_URL}/rss.xml` },
   ],
   meta: [
     { property: 'og:site_name', content: SITE_NAME },
