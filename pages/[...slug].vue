@@ -142,9 +142,89 @@ import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 // Import Reveal styles
 import 'reveal.js/dist/reveal.css';
 import 'reveal.js/dist/theme/black.css';
+// 仅引入 Reveal.js 的类型定义（不打包运行时代码，运行时仍走动态 import）
+import type Reveal from 'reveal.js';
+
+// 站点配置数据类型：根据 data/site-config.json 的结构定义
+// 联合类型便于在模板中以 slide.type === 'projects' 做类型收窄
+interface SlideItem {
+  slug: string
+  image: string
+  icon: string
+  title: string
+  text: string
+  href: string
+}
+
+interface SlideCover {
+  slug: string
+  title: string
+  subtitle: string
+  backgroundColor: string
+}
+
+interface SocialLink {
+  icon: string
+  name: string
+  href: string
+}
+
+interface HeroSlide {
+  type: 'hero'
+  slug: string
+  backgroundGradient?: string
+  backgroundColor?: string
+  title: string
+  subtitle: string
+  actionButton?: { text: string; link: string }
+}
+
+interface ProjectsSlide {
+  type: 'projects'
+  slug: string
+  backgroundGradient?: string
+  backgroundColor?: string
+  cover?: SlideCover
+  items: SlideItem[]
+}
+
+interface AboutSlide {
+  type: 'about'
+  slug: string
+  backgroundGradient?: string
+  backgroundColor?: string
+  title: string
+  content: string
+}
+
+interface ContactSlide {
+  type: 'contact'
+  slug: string
+  backgroundGradient?: string
+  backgroundColor?: string
+  title: string
+  socialLinks: SocialLink[]
+  copyright: string
+}
+
+type Slide = HeroSlide | ProjectsSlide | AboutSlide | ContactSlide
+
+interface SiteConfig {
+  slides: Slide[]
+}
+
+// Reveal.js slidechanged 事件结构（@types/reveal.js 把 on 定义为 HTMLElement['addEventListener']，
+// 缺少 indexh/indexv 字段，故在此精确化）
+interface SlideChangedEvent extends Event {
+  indexh: number
+  indexv: number
+  indexf?: number
+  currentSlide?: HTMLElement
+}
 
 // 静态导入站点配置：SSG 下 useFetch 会因 baseURL 前缀在服务端取数据 404，
 // 静态导入使 SSR/预渲染即可获得幻灯片数据（SEO + 无首屏 loading 闪烁）
+// JSON 默认推断为字面量类型，用 as SiteConfig 收紧到结构化联合类型
 import siteConfig from '~/data/site-config.json';
 
 const route = useRoute();
@@ -184,18 +264,19 @@ function resolvePath(path: string) {
 }
 
 // 站点配置通过文件顶部静态导入获取，无需运行时 fetch
-const config = ref(siteConfig);
+const config = ref<SiteConfig>(siteConfig as SiteConfig);
 // Reveal.js 客户端初始化状态：完成前显示 loading 遮罩。
 // 幻灯片结构在 SSR 即渲染（保证 SEO），客户端初始化完成后移除遮罩避免裸露堆叠闪烁。
 const revealReady = ref(false);
 const initError = ref<string | null>(null);
 
-let revealInstance: any = null;
+let revealInstance: Reveal.Api | null = null;
 const revealContainer = ref<HTMLElement | null>(null);
 const currentIndex = ref(0);
 
 // 处理路由更新（例如点击浏览器后退按钮）
-onBeforeRouteUpdate((to, from, next) => {
+// _from 为 vue-router NavigationGuard 签名要求的位置参数，下划线前缀标记故意未使用
+onBeforeRouteUpdate((to, _from, next) => {
   if (!revealInstance || !config.value) {
     next();
     return;
@@ -244,7 +325,7 @@ function getIndicesFromSlug(slugs: string[]) {
   let h = 0, v = 0;
 
   // 查找水平索引
-  const hIndex = config.value.slides.findIndex((s: any) => s.slug === rootSlug);
+  const hIndex = config.value.slides.findIndex((s: Slide) => s.slug === rootSlug);
   if (hIndex !== -1) {
     h = hIndex;
     const slide = config.value.slides[hIndex];
@@ -260,7 +341,7 @@ function getIndicesFromSlug(slugs: string[]) {
         if (subSlug === 'cover') {
             v = 0;
         } else if (slide.items) {
-            const itemIndex = slide.items.findIndex((item: any) => item.slug === subSlug);
+            const itemIndex = slide.items.findIndex((item: SlideItem) => item.slug === subSlug);
             if (itemIndex !== -1) {
                 v = itemIndex + 1; // +1 因为 cover 占了 v=0
             }
@@ -414,12 +495,15 @@ async function initReveal() {
         currentIndex.value = h;
 
         // 监听切换事件，更新 URL
-        deck.on('slidechanged', (event: any) => {
-            currentIndex.value = event.indexh;
-            const h = event.indexh;
-            const v = event.indexv;
+        deck.on('slidechanged', (event) => {
+            // Reveal.js 的 on 类型是 HTMLElement['addEventListener']，event 默认推断为 Event，
+            // 缺少 indexh/indexv 字段，断言为 SlideChangedEvent 后访问
+            const e = event as SlideChangedEvent;
+            currentIndex.value = e.indexh;
+            const h = e.indexh;
+            const v = e.indexv;
             const newPath = getPathFromIndices(h, v);
-            
+
             // 使用 router.replace 更新 URL
             if (route.path !== newPath) {
                  router.replace(newPath);

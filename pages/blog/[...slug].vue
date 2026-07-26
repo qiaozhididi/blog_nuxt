@@ -38,20 +38,57 @@ if (!data.value) {
 }
 
 // 动态设置页面标题与描述（取自文章 frontmatter，缺失时兜底）
-useHead(() => ({
-  title: data.value?.title || '文章',
-  meta: [
-    { name: 'description', content: data.value?.description || '乔治弟弟的博客文章' },
-    // 文章页 OG 类型为 article，覆盖全局 website
-    { property: 'og:type', content: 'article' },
-    { property: 'og:title', content: data.value?.title || '文章' },
-    { property: 'og:description', content: data.value?.description || '乔治弟弟的博客文章' },
-    // published_time 用 ISO 格式，兼容 frontmatter 中 string/Date 两种情况
-    ...(data.value?.date
-      ? [{ property: 'article:published_time', content: new Date(data.value.date).toISOString() }]
-      : []),
-  ],
-}));
+useHead(() => {
+  const title = data.value?.title || '文章'
+  const description = data.value?.description || '乔治弟弟的博客文章'
+  const datePublished = data.value?.date ? new Date(data.value.date).toISOString() : ''
+  const articleUrl = `https://qzfrato.github.io/blog_nuxt${route.path}`
+
+  // Article JSON-LD：文章级结构化数据，配合 Google 富媒体结果展示
+  // 日期字段仅在有 frontmatter date 时填充，避免出现空字符串
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'zh-CN',
+    author: {
+      '@type': 'Person',
+      name: '乔治弟弟',
+      url: 'https://qzfrato.github.io/blog_nuxt/',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '乔治弟弟_Blog',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
+    url: articleUrl,
+    image: 'https://qzfrato.github.io/blog_nuxt/images/CodePen.png',
+    ...(datePublished ? { datePublished, dateModified: datePublished } : {}),
+  }
+
+  return {
+    title,
+    meta: [
+      { name: 'description', content: description },
+      // 文章页 OG 类型为 article，覆盖全局 website
+      { property: 'og:type', content: 'article' },
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
+      // published_time 用 ISO 格式，兼容 frontmatter 中 string/Date 两种情况
+      ...(datePublished ? [{ property: 'article:published_time', content: datePublished }] : []),
+    ],
+    script: [
+      {
+        type: 'application/ld+json',
+        innerHTML: JSON.stringify(jsonLd),
+      },
+    ],
+  }
+})
 </script>
 
 <style>

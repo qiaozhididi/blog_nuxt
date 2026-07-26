@@ -25,6 +25,20 @@ useHead(() => ({
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:image', content: DEFAULT_OG_IMAGE },
   ],
+  // WebSite JSON-LD：站点级结构化数据，配合 Google 富媒体结果展示
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: `${SITE_URL}/`,
+        inLanguage: 'zh-CN',
+        description: '乔治弟弟的个人博客 - 探索代码的无限可能',
+      }),
+    },
+  ],
 }))
 </script>
 
