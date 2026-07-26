@@ -10,7 +10,8 @@ export default defineNuxtConfig({
       // SSG 预渲染 sitemap.xml 为静态文件：GitHub Pages 为纯静态托管，
       // 无法运行 server route，必须显式预渲染生成 .output/public/sitemap.xml
       // /blog 显式预渲染确保 GitHub Pages 部署后列表页有独立 HTML（content 文章页由 @nuxt/content 自动预渲染）
-      routes: ['/sitemap.xml', '/blog'],
+      // /rss.xml 显式预渲染，部署到 GitHub Pages 后可静态访问
+      routes: ['/sitemap.xml', '/blog', '/rss.xml'],
     },
   },
   app: {
