@@ -1,14 +1,14 @@
 ---
-title: 寰通Talk AI销售助手 — 面试题与答案
-description: 基于寰通 Talk AI 销售助手项目实际技术栈的面试题集，涵盖 RAG、LangChain/LangGraph、记忆系统与系统设计等核心主题。
+title: AI_RAG项目面试题 — 面试题与答案
+description: 基于 AI_RAG 项目实际技术栈的面试题集，涵盖 RAG、LangChain/LangGraph、记忆系统与系统设计等核心主题。
 date: 2026-07-20
 ---
 
-# 寰通Talk AI销售助手 — 面试题与答案
+# AI_RAG项目面试题 — 面试题与答案
 
 > 基于项目实际技术栈和架构设计，涵盖 RAG、LangChain/LangGraph、记忆系统、Prompt 工程、系统设计等核心主题。
 
----
+***
 
 ## 一、RAG（检索增强生成）
 
@@ -28,13 +28,14 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种将"信息�
 
 **本项目实践：** 系统通过 WeKnora 知识库进行 RAG 检索，支持语义搜索、关键词搜索和混合搜索。在知识库模式下，系统提示词强制要求"基于知识库检索结果回答，禁止编造"。
 
----
+***
 
 ### Q2: RAG 的基本流程是什么？本项目做了哪些增强？
 
 **答案：**
 
 **基本 RAG 流程：**
+
 ```
 用户查询 → 向量化 → 向量检索 → 检索结果拼接 → LLM 生成
 ```
@@ -48,22 +49,22 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种将"信息�
 5. **降级容错**：WeKnora 不可用时返回 `WeKnoraDegradedFallback`，告知 LLM 基于通用知识回答，保证服务可用性
 6. **重试策略**：内置 `RetryExecutor`，网络抖动时自动重试
 
----
+***
 
 ### Q3: 语义搜索和关键词搜索的区别？什么时候用混合搜索？
 
 **答案：**
 
-| 维度 | 语义搜索 | 关键词搜索 |
-|------|----------|------------|
-| 原理 | 将文本转为向量，计算语义相似度 | 精确匹配关键词/词组 |
-| 优势 | 理解同义词、语义关联 | 精确匹配产品型号、价格数字 |
-| 劣势 | 可能遗漏精确匹配 | 无法理解语义变体 |
+| 维度 | 语义搜索                 | 关键词搜索                 |
+| -- | -------------------- | --------------------- |
+| 原理 | 将文本转为向量，计算语义相似度      | 精确匹配关键词/词组            |
+| 优势 | 理解同义词、语义关联           | 精确匹配产品型号、价格数字         |
+| 劣势 | 可能遗漏精确匹配             | 无法理解语义变体              |
 | 场景 | "运费怎么算" → 匹配"物流费用政策" | "LED-2000" → 精确匹配产品型号 |
 
 **混合搜索（Hybrid）** 结合两者优势，本项目默认使用混合搜索。例如客户问"LED-2000 的运费多少"，关键词搜索精确匹配产品型号，语义搜索匹配运费政策，两者结果融合后提供更完整的上下文。
 
----
+***
 
 ### Q4: RAG 中如何处理检索结果的质量？如果检索到不相关内容怎么办？
 
@@ -82,7 +83,7 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种将"信息�
 2. **降级模式**：WeKnora 不可用时切换到 AI 模式，基于通用知识回答
 3. **反馈闭环**：用户标记"无用"的回复，其教训会注入后续 Prompt，避免类似问题
 
----
+***
 
 ## 二、LangChain 与 LangGraph
 
@@ -102,7 +103,7 @@ LangChain 是一个用于构建 LLM 应用的框架，核心价值是**将 LLM �
 
 **本项目实践：** 使用 `init_chat_model()` 统一创建不同 provider 的 ChatModel，通过 `with_structured_output` 获取包含 confidence/alternatives/reasoning 的结构化回复。
 
----
+***
 
 ### Q6: LangGraph 是什么？和 LangChain 是什么关系？
 
@@ -111,29 +112,31 @@ LangChain 是一个用于构建 LLM 应用的框架，核心价值是**将 LLM �
 LangGraph 是 LangChain 团队推出的**有状态多步工作流编排框架**，基于图（Graph）结构定义节点和边，支持条件分支、循环、状态持久化。
 
 **与 LangChain 的关系：**
+
 - LangChain 提供**组件**（LLM、检索器、工具等）
 - LangGraph 提供**编排**（将组件组织成有状态的工作流图）
 - LangGraph 是 LangChain 生态的一部分，但可以独立使用
 
 **为什么需要 LangGraph 而不是直接链式调用：**
 
-| 维度 | 直接链式调用 | LangGraph |
-|------|-------------|-----------|
-| 可观测性 | 难以追踪中间状态 | 每个节点的输入/输出可追踪 |
-| 条件分支 | if-else 嵌套 | 图的边支持条件路由 |
-| 状态管理 | 手动传递 | `WorkflowState` 自动流转 |
-| 可扩展性 | 修改链路影响全局 | 增删节点不影响其他节点 |
-| 调试 | 断点难设 | 可在任意节点暂停/检查 |
+| 维度   | 直接链式调用     | LangGraph            |
+| ---- | ---------- | -------------------- |
+| 可观测性 | 难以追踪中间状态   | 每个节点的输入/输出可追踪        |
+| 条件分支 | if-else 嵌套 | 图的边支持条件路由            |
+| 状态管理 | 手动传递       | `WorkflowState` 自动流转 |
+| 可扩展性 | 修改链路影响全局   | 增删节点不影响其他节点          |
+| 调试   | 断点难设       | 可在任意节点暂停/检查          |
 
 **本项目实践：** 定义了推荐回复图（7 节点线性流水线）和标题生成图（单节点），通过 `LANGGRAPH_ENABLED` 配置切换 LangGraph 路径和直接路径。
 
----
+***
 
 ### Q7: 本项目的 LangGraph 工作流是如何设计的？为什么选择线性流水线？
 
 **答案：**
 
 **推荐回复图：**
+
 ```
 chat_cleaner → customer_profiler → memory_retriever → weknora_rag → web_search → prompt_builder → llm → END
 ```
@@ -142,13 +145,14 @@ chat_cleaner → customer_profiler → memory_retriever → weknora_rag → web_
 
 1. **业务逻辑天然有序**：必须先清洗消息 → 再检索记忆/RAG → 再组装 Prompt → 最后调用 LLM，存在严格的数据依赖
 2. **简单可靠**：线性流水线没有条件分支和循环，执行路径确定，易于调试
-3. **性能考虑**：虽然 memory_retriever 和 weknora_rag 理论上可以并行，但实际测试中并行带来的性能提升有限（两者都是 IO 密集型，且 Redis/DB 连接池有限），线性执行更稳定
+3. **性能考虑**：虽然 memory\_retriever 和 weknora\_rag 理论上可以并行，但实际测试中并行带来的性能提升有限（两者都是 IO 密集型，且 Redis/DB 连接池有限），线性执行更稳定
 
 **如果未来需要扩展：**
-- 可以将 memory_retriever 和 weknora_rag 改为并行节点（fan-out/fan-in 模式）
+
+- 可以将 memory\_retriever 和 weknora\_rag 改为并行节点（fan-out/fan-in 模式）
 - 可以在 llm 节点后添加条件分支（如低置信度时触发二次检索）
 
----
+***
 
 ### Q8: `with_structured_output` 是什么？如何工作的？
 
@@ -175,7 +179,7 @@ class StructuredReply(BaseModel):
 
 通过 `generate_structured_reply()` 调用 `model.with_structured_output(StructuredReply)`，获取结构化的 AI 回复，前端可展示置信度、备选方案和推荐理由。
 
----
+***
 
 ## 三、记忆系统
 
@@ -191,15 +195,15 @@ class StructuredReply(BaseModel):
 
 **三层记忆的设计哲学：**
 
-| 层级 | 存储 | 内容 | 特点 |
-|------|------|------|------|
-| L1 短期 | Redis | 最近 20 条消息 | 毫秒级访问，1 小时 TTL，即时上下文 |
-| L2 中期 | PostgreSQL | 摘要/意图/价格敏感度 | 持久化，压缩历史，重要背景 |
-| L3 长期 | PostgreSQL | 标签/行业/兴趣/购买意向 | 持久化，客户画像，核心参考 |
+| 层级    | 存储         | 内容            | 特点                   |
+| ----- | ---------- | ------------- | -------------------- |
+| L1 短期 | Redis      | 最近 20 条消息     | 毫秒级访问，1 小时 TTL，即时上下文 |
+| L2 中期 | PostgreSQL | 摘要/意图/价格敏感度   | 持久化，压缩历史，重要背景        |
+| L3 长期 | PostgreSQL | 标签/行业/兴趣/购买意向 | 持久化，客户画像，核心参考        |
 
 **核心思想：** 不同时效的信息需要不同的存储策略——即时对话需要低延迟（Redis），历史摘要需要压缩（DB），客户画像需要长期积累（DB）。三层协同既保证了实时性，又控制了成本和 Token 消耗。
 
----
+***
 
 ### Q10: 记忆权重标注是什么？为什么要在 Prompt 中标注权重？
 
@@ -217,7 +221,7 @@ class StructuredReply(BaseModel):
 2. **处理空记忆**：当客户是新客户、L2/L3 为空时，标注"补充参考"避免模型"脑补"不存在的客户信息
 3. **减少幻觉**：明确告知哪些信息是"核心参考"（真实数据），哪些是"补充参考"（可能不完整），减少基于不完整信息的推断
 
----
+***
 
 ### Q11: L1 记忆为什么用 Redis 而不是直接放在请求里？
 
@@ -231,7 +235,7 @@ class StructuredReply(BaseModel):
 
 **实现方式：** 使用 Redis List（`lpush` + `ltrim`），按 `customer_id` 隔离，保留最近 20 条，1 小时 TTL。
 
----
+***
 
 ## 四、Prompt 工程
 
@@ -239,9 +243,9 @@ class StructuredReply(BaseModel):
 
 **答案：**
 
-| 模式 | 核心指令 | 适用场景 |
-|------|----------|----------|
-| 知识库模式 | "必须基于知识库检索结果回答，禁止编造" | 客户询问产品规格、价格、物流等具体问题 |
+| 模式    | 核心指令                          | 适用场景                |
+| ----- | ----------------------------- | ------------------- |
+| 知识库模式 | "必须基于知识库检索结果回答，禁止编造"          | 客户询问产品规格、价格、物流等具体问题 |
 | AI 模式 | "基于通用知识自由回答，涉及具体产品时建议切换知识库模式" | 客户闲聊、通用咨询、知识库未覆盖的问题 |
 
 **为什么需要两种模式：**
@@ -250,7 +254,7 @@ class StructuredReply(BaseModel):
 2. **AI 模式**保证灵活性：不是所有问题都能在知识库中找到答案（如行业趋势、通用建议），AI 模式允许 LLM 发挥通用能力
 3. **用户选择权**：业务员根据实际情况选择模式，知识库模式更安全但可能"答不上来"，AI 模式更灵活但可能不够精确
 
----
+***
 
 ### Q13: 反馈教训如何注入 Prompt？这个设计有什么价值？
 
@@ -270,7 +274,7 @@ class StructuredReply(BaseModel):
 3. **闭环反馈**：形成"生成 → 评价 → 学习 → 改进"的闭环
 4. **低成本**：相比 Fine-tuning，反馈教训注入是零成本的优化手段
 
----
+***
 
 ## 五、系统设计
 
@@ -278,11 +282,11 @@ class StructuredReply(BaseModel):
 
 **答案：**
 
-| 维度 | LangGraph 路径 | 直接路径 |
-|------|---------------|----------|
-| 优势 | 可观测、可扩展、状态可追踪 | 简单、快速、依赖少 |
+| 维度 | LangGraph 路径        | 直接路径            |
+| -- | ------------------- | --------------- |
+| 优势 | 可观测、可扩展、状态可追踪       | 简单、快速、依赖少       |
 | 劣势 | 引入 LangGraph 依赖、略复杂 | 难以追踪中间状态、扩展需改代码 |
-| 适用 | 生产环境、需要调试和监控 | 快速验证、简单场景 |
+| 适用 | 生产环境、需要调试和监控        | 快速验证、简单场景       |
 
 **设计考量：**
 
@@ -291,7 +295,7 @@ class StructuredReply(BaseModel):
 3. **功能对等**：两种路径支持完全相同的功能（RAG、联网搜索、反馈注入等），只是编排方式不同
 4. **风险控制**：LangGraph 出问题时可以快速回退到直接路径
 
----
+***
 
 ### Q15: 多模型路由（ModelRouter）的设计意义是什么？
 
@@ -318,7 +322,7 @@ class StructuredReply(BaseModel):
 
 **实现关键：** 使用 `init_chat_model()` 统一创建不同 provider 的 ChatModel，`_model_cache` 缓存实例避免重复创建。
 
----
+***
 
 ### Q16: 数据隔离是如何实现的？为什么重要？
 
@@ -328,7 +332,7 @@ class StructuredReply(BaseModel):
 
 1. **数据模型层**：所有业务表（Customer、ChatMessage、Session 等）都包含 `sales_rep_id` 字段
 2. **Repository 层**：所有查询都按 `sales_rep_id` 过滤，例如 `chat_repo.get_by_customer_id(customer_id, sales_rep_id)`
-3. **Service 层**：业务逻辑验证数据归属，如 `AIService.recommend_reply()` 先验证 customer 属于当前 sales_rep
+3. **Service 层**：业务逻辑验证数据归属，如 `AIService.recommend_reply()` 先验证 customer 属于当前 sales\_rep
 4. **API 层**：从 JWT Token 中提取 `sales_rep_id`，传入后续调用
 
 **为什么重要：**
@@ -337,7 +341,7 @@ class StructuredReply(BaseModel):
 2. **合规要求**：外贸场景涉及客户隐私，数据隔离是法律合规的基础
 3. **多租户基础**：数据隔离是多租户架构的前提，为未来 SaaS 化铺路
 
----
+***
 
 ### Q17: 降级容错策略有哪些？为什么需要降级？
 
@@ -345,12 +349,12 @@ class StructuredReply(BaseModel):
 
 **本项目的降级策略：**
 
-| 组件 | 降级策略 | 影响 |
-|------|----------|------|
-| WeKnora 知识库 | 返回 `WeKnoraDegradedFallback`，告知 LLM 基于通用知识回答 | 回复可能不够精确，但服务可用 |
-| 联网搜索 | 静默跳过，不注入搜索结果 | 缺少实时信息，但不影响核心功能 |
-| Redis (L1 记忆) | 降级为无近期对话上下文 | 回复缺少即时上下文，但 L2/L3 仍可用 |
-| LLM 调用 | 重试策略（`RetryExecutor`） | 短暂网络抖动自动恢复 |
+| 组件            | 降级策略                                         | 影响                    |
+| ------------- | -------------------------------------------- | --------------------- |
+| WeKnora 知识库   | 返回 `WeKnoraDegradedFallback`，告知 LLM 基于通用知识回答 | 回复可能不够精确，但服务可用        |
+| 联网搜索          | 静默跳过，不注入搜索结果                                 | 缺少实时信息，但不影响核心功能       |
+| Redis (L1 记忆) | 降级为无近期对话上下文                                  | 回复缺少即时上下文，但 L2/L3 仍可用 |
+| LLM 调用        | 重试策略（`RetryExecutor`）                        | 短暂网络抖动自动恢复            |
 
 **为什么需要降级：**
 
@@ -358,7 +362,7 @@ class StructuredReply(BaseModel):
 2. **部分降级 > 完全不可用**：没有 RAG 上下文的回复虽然不够精确，但仍然有价值
 3. **用户体验**：用户更愿意接受"不够精确的回答"而非"服务不可用"
 
----
+***
 
 ## 六、前端架构
 
@@ -370,16 +374,16 @@ class StructuredReply(BaseModel):
 
 **V2 vs V3 关键区别：**
 
-| 维度 | V2 | V3 |
-|------|----|----|
-| 后台脚本 | background page（持久） | service worker（非持久） |
-| 远程代码 | 允许 eval / 远程 JS | 禁止，只能用本地代码 |
-| API | chrome.extension.* | chrome.action.* / chrome.scripting.* |
-| 安全性 | 较弱 | 更严格的内容安全策略 |
+| 维度   | V2                  | V3                                     |
+| ---- | ------------------- | -------------------------------------- |
+| 后台脚本 | background page（持久） | service worker（非持久）                    |
+| 远程代码 | 允许 eval / 远程 JS     | 禁止，只能用本地代码                             |
+| API  | chrome.extension.\* | chrome.action.\* / chrome.scripting.\* |
+| 安全性  | 较弱                  | 更严格的内容安全策略                             |
 
 **本项目适配：** `service-worker.js` 作为后台服务，处理消息路由和 API 代理。由于 service worker 非持久，需要注意状态管理和连接保活。
 
----
+***
 
 ### Q19: SSE 流式响应的实现原理是什么？和 WebSocket 有什么区别？
 
@@ -395,16 +399,16 @@ class StructuredReply(BaseModel):
 
 **SSE vs WebSocket：**
 
-| 维度 | SSE | WebSocket |
-|------|-----|-----------|
-| 方向 | 服务端 → 客户端（单向） | 双向 |
-| 协议 | HTTP | WS |
-| 重连 | 自动重连 | 需手动实现 |
-| 适用 | 流式输出（LLM 回复） | 双向通信（实时通知） |
+| 维度 | SSE           | WebSocket  |
+| -- | ------------- | ---------- |
+| 方向 | 服务端 → 客户端（单向） | 双向         |
+| 协议 | HTTP          | WS         |
+| 重连 | 自动重连          | 需手动实现      |
+| 适用 | 流式输出（LLM 回复）  | 双向通信（实时通知） |
 
 **本项目同时使用两者：** SSE 用于 AI 回复的流式输出，WebSocket 用于双向事件推送（AI 回复完成通知、画像更新等）。
 
----
+***
 
 ### Q20: Content Script 和 Side Panel 如何通信？
 
@@ -429,7 +433,7 @@ Side Panel (sidepanel.js)
 
 **为什么需要 service-worker 中转：** Manifest V3 中，content script 和 side panel 不能直接通信，必须通过 service-worker 中转。
 
----
+***
 
 ## 七、数据库与缓存
 
@@ -438,11 +442,13 @@ Side Panel (sidepanel.js)
 **答案：**
 
 **PostgreSQL：**
+
 - 关系型数据（客户、会话、消息、反馈）需要事务和复杂查询
 - JSONB 字段存储灵活结构（客户画像、记忆数据）
 - 成熟的异步驱动（asyncpg），与 FastAPI 的异步架构匹配
 
 **Redis：**
+
 - L1 短期记忆需要毫秒级读写
 - 搜索结果缓存减少 WeKnora 调用
 - Celery 消息队列的 broker
@@ -450,7 +456,7 @@ Side Panel (sidepanel.js)
 
 **组合优势：** PostgreSQL 保证数据持久化和一致性，Redis 提供低延迟的热数据访问，两者互补而非替代。
 
----
+***
 
 ### Q22: SQLAlchemy 2.0 的异步 ORM 如何使用？有什么注意事项？
 
@@ -476,7 +482,7 @@ async with AsyncSession(engine) as session:
 
 **本项目实践：** `db/session.py` 管理 AsyncSession 的创建，工作流节点通过 `state._db_session` 传递数据库会话。
 
----
+***
 
 ## 八、异步与并发
 
@@ -497,18 +503,18 @@ async with AsyncSession(engine) as session:
 
 **本项目实践：** 核心路径全部异步（`async def`），Celery 处理 CPU 密集型的画像生成和摘要任务。
 
----
+***
 
 ### Q24: Celery 异步任务在本项目中用于什么场景？
 
 **答案：**
 
-| 任务 | 调度 | 用途 |
-|------|------|------|
+| 任务         | 调度       | 用途        |
+| ---------- | -------- | --------- |
 | 批量更新过期客户画像 | 每日 02:00 | L3 画像定期刷新 |
-| 清理审计日志 | 每日 03:00 | 数据生命周期管理 |
-| 清理过期会话 | 每日 04:00 | 释放存储空间 |
-| 检测知识库变更 | 每小时 30 分 | 增量更新缓存 |
+| 清理审计日志     | 每日 03:00 | 数据生命周期管理  |
+| 清理过期会话     | 每日 04:00 | 释放存储空间    |
+| 检测知识库变更    | 每小时 30 分 | 增量更新缓存    |
 
 **为什么用 Celery 而不是直接异步：**
 
@@ -518,7 +524,7 @@ async with AsyncSession(engine) as session:
 4. **监控**：Flower 提供任务监控面板
 5. **解耦**：后台任务不占用 Web 服务器资源
 
----
+***
 
 ## 九、安全与认证
 
@@ -529,35 +535,35 @@ async with AsyncSession(engine) as session:
 **认证流程：**
 
 1. 业务员提交 username + password 到 `/api/v1/auth/login`
-2. 后端验证密码（bcrypt），生成 access_token（2h）+ refresh_token（7d）
+2. 后端验证密码（bcrypt），生成 access\_token（2h）+ refresh\_token（7d）
 3. 前端存储 Token，后续请求携带 `Authorization: Bearer <access_token>`
 4. 后端中间件验证 Token 有效性
 
 **Token 刷新机制：**
 
-- 前端在 access_token 过期前 5 分钟主动刷新
-- 使用 refresh_token 调用刷新接口，获取新的 access_token
+- 前端在 access\_token 过期前 5 分钟主动刷新
+- 使用 refresh\_token 调用刷新接口，获取新的 access\_token
 - 避免用户在使用过程中突然被登出
 
-**为什么 access_token 设 2 小时：** 平衡安全性和用户体验——太短需要频繁刷新，太长增加被盗风险。
+**为什么 access\_token 设 2 小时：** 平衡安全性和用户体验——太短需要频繁刷新，太长增加被盗风险。
 
----
+***
 
 ### Q26: 限流策略是如何设计的？
 
 **答案：**
 
-| 接口类型 | 限流规则 | 原因 |
-|----------|----------|------|
+| 接口类型  | 限流规则   | 原因             |
+| ----- | ------ | -------------- |
 | AI 推荐 | 20/min | LLM 调用成本高，防止滥用 |
-| 认证 | 5/min | 防止暴力破解 |
-| 默认 | 60/min | 通用保护 |
+| 认证    | 5/min  | 防止暴力破解         |
+| 默认    | 60/min | 通用保护           |
 
 **实现方式：** 使用 SlowAPI（基于 limits 库），按 IP + 路由维度限流。
 
 **为什么 AI 接口限流最严格：** LLM 调用按 Token 计费，一次请求可能消耗数千 Token，恶意调用会导致高额账单。
 
----
+***
 
 ## 十、综合设计题
 
@@ -573,7 +579,7 @@ async with AsyncSession(engine) as session:
 
 **关键考虑：** LLM 本身具备多语言能力，核心挑战在于 RAG 检索的多语言匹配和知识库的多语言内容覆盖。
 
----
+***
 
 ### Q28: 如何评估 AI 回复的质量？有哪些指标？
 
@@ -593,7 +599,7 @@ async with AsyncSession(engine) as session:
 4. **响应时间**：端到端延迟（从请求到首字输出）
 5. **幻觉率**：AI 回复中与知识库矛盾的比例
 
----
+***
 
 ### Q29: 系统的水平扩展方案是什么？
 
@@ -612,13 +618,13 @@ async with AsyncSession(engine) as session:
 2. **SSE 连接**：流式响应绑定到特定实例，需要 sticky session 或消息队列
 3. **ModelRouter 缓存**：`_model_cache` 是进程内缓存，多实例各自缓存，但影响不大（ChatModel 创建成本低）
 
----
+***
 
 ### Q30: 如果让你重新设计这个系统，你会做哪些改进？
 
 **答案：**
 
-1. **RAG 并行化**：memory_retriever 和 weknora_rag 可以并行执行，减少端到端延迟
+1. **RAG 并行化**：memory\_retriever 和 weknora\_rag 可以并行执行，减少端到端延迟
 2. **流式 RAG**：先返回高相关度文档的回复，再补充低相关度文档的细节
 3. **Agent 架构**：从线性流水线升级为 Agent 架构，让 LLM 自主决定是否需要检索、搜索、或直接回答
 4. **向量数据库**：将 WeKnora 的向量检索功能内化，使用 Milvus/Qdrant 自建，减少外部依赖
@@ -627,21 +633,22 @@ async with AsyncSession(engine) as session:
 7. **可观测性**：集成 LangSmith/LangFuse 进行 LLM 调用链追踪和评估
 8. **缓存预热**：业务员登录时预加载常用客户的 L1/L2 记忆，减少首次请求延迟
 
----
+***
 
 ## 附录：项目核心文件速查
 
-| 文件 | 路径 | 核心职责 |
-|------|------|----------|
-| llm_client.py | `app/ai/llm_client.py` | LLM 多模型路由 |
-| graph.py | `app/ai/graph.py` | LangGraph 工作流定义 |
-| state.py | `app/ai/state.py` | 工作流状态 |
-| ai_service.py | `app/services/ai_service.py` | AI 推荐核心服务 |
-| retriever.py | `app/core/weknora/retriever.py` | RAG 高级检索器 |
-| system_prompt.py | `app/ai/prompts/system_prompt.py` | 系统提示词 |
-| sales_prompt.py | `app/ai/prompts/sales_prompt.py` | 销售用户提示词 |
-| l1_cache.py | `app/ai/memory/l1_cache.py` | L1 Redis 短期记忆 |
-| l2_summary.py | `app/ai/memory/l2_summary.py` | L2 DB 中期摘要 |
-| l3_profile.py | `app/ai/memory/l3_profile.py` | L3 DB 长期画像 |
-| sidepanel.js | `frontend/sidepanel/sidepanel.js` | Chrome 扩展侧边栏 |
-| content.js | `frontend/content/content.js` | 页面 DOM 解析 |
+| 文件                | 路径                                | 核心职责            |
+| ----------------- | --------------------------------- | --------------- |
+| llm\_client.py    | `app/ai/llm_client.py`            | LLM 多模型路由       |
+| graph.py          | `app/ai/graph.py`                 | LangGraph 工作流定义 |
+| state.py          | `app/ai/state.py`                 | 工作流状态           |
+| ai\_service.py    | `app/services/ai_service.py`      | AI 推荐核心服务       |
+| retriever.py      | `app/core/weknora/retriever.py`   | RAG 高级检索器       |
+| system\_prompt.py | `app/ai/prompts/system_prompt.py` | 系统提示词           |
+| sales\_prompt.py  | `app/ai/prompts/sales_prompt.py`  | 销售用户提示词         |
+| l1\_cache.py      | `app/ai/memory/l1_cache.py`       | L1 Redis 短期记忆   |
+| l2\_summary.py    | `app/ai/memory/l2_summary.py`     | L2 DB 中期摘要      |
+| l3\_profile.py    | `app/ai/memory/l3_profile.py`     | L3 DB 长期画像      |
+| sidepanel.js      | `frontend/sidepanel/sidepanel.js` | Chrome 扩展侧边栏    |
+| content.js        | `frontend/content/content.js`     | 页面 DOM 解析       |
+
