@@ -33,7 +33,7 @@
               <p class="text-gray-400 mb-4">{{ article.description || '暂无描述' }}</p>
               <div class="flex items-center text-sm text-gray-500">
                 <span class="mr-4">
-                  <i class="fa fa-clock-o mr-1"></i>
+                  <Icon name="clock" class="mr-1" />
                   {{ article.date ? new Date(article.date).toLocaleDateString() : '未知日期' }}
                 </span>
               </div>
