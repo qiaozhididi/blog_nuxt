@@ -19,6 +19,11 @@ export default defineNuxtConfig({
       // title 与 titleTemplate 移至 app.vue 的 useHead：
       // nuxt.config 的 app.head 类型为可序列化形式，titleTemplate 仅支持 string，
       // 而条件格式化需函数形式，故改在运行时 useHead 设置
+      viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
+      meta: [
+        // theme-color 与首页 hero 背景一致（slate-900），影响移动端浏览器 UI 着色
+        { name: 'theme-color', content: '#0f172a' },
+      ],
       link: [
         {
           rel: "stylesheet",
@@ -29,5 +34,9 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+  // 严格 TypeScript：编译期捕获类型错误，提升代码健壮性
+  typescript: {
+    strict: true,
   },
 });
