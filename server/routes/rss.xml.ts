@@ -23,7 +23,13 @@ function escapeXml(s: string): string {
 // 动态生成 rss.xml：自动收录 @nuxt/content 博客文章，
 // 按 frontmatter date 倒序，最多 20 篇。新增文章无需手动维护。
 export default defineEventHandler(async (event) => {
-  const articles = await queryCollection(event, 'blog').all()
+  // spec §6：queryCollection 失败时返回空 channel（不抛 500，避免破坏爬虫抓取）
+  let articles: { path: string; title?: string; description?: string; date?: string | Date }[] = []
+  try {
+    articles = await queryCollection(event, 'blog').all()
+  } catch (e) {
+    console.error('[rss.xml] queryCollection failed:', e)
+  }
 
   // 排序：有 date 的按 date 倒序在前，无 date 的排最后
   // 取前 MAX_ITEMS 篇
@@ -48,12 +54,12 @@ export default defineEventHandler(async (event) => {
       <link>${link}</link>
       <guid isPermaLink="true">${link}</guid>
       <description>${description}</description>${pubDate ? `\n      <pubDate>${pubDate}</pubDate>` : ''}
-      <author>${AUTHOR}</author>
+      <dc:creator>${escapeXml(AUTHOR)}</dc:creator>
     </item>`
   }).join('\n')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${escapeXml(SITE_NAME)}</title>
     <link>${SITE_URL}/</link>
