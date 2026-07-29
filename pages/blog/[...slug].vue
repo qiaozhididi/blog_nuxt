@@ -1,28 +1,34 @@
 <template>
   <div ref="scrollContainer" class="h-screen overflow-y-auto bg-gray-900 text-white p-8">
     <ReadingProgress :container="scrollContainer" />
-    <div class="max-w-4xl mx-auto">
-      <!-- Navigation -->
-      <nav class="mb-8 flex items-center gap-4 text-sm text-gray-400">
-        <NuxtLink to="/" class="hover:text-white transition">首页</NuxtLink>
-        <span>/</span>
-        <NuxtLink to="/blog" class="hover:text-white transition">博客</NuxtLink>
-        <span>/</span>
-        <span class="text-white">{{ data?.title }}</span>
-      </nav>
+    <div class="max-w-6xl mx-auto flex gap-8">
+      <div class="flex-1 min-w-0 max-w-4xl">
+        <!-- Navigation -->
+        <nav class="mb-8 flex items-center gap-4 text-sm text-gray-400">
+          <NuxtLink to="/" class="hover:text-white transition">首页</NuxtLink>
+          <span>/</span>
+          <NuxtLink to="/blog" class="hover:text-white transition">博客</NuxtLink>
+          <span>/</span>
+          <span class="text-white">{{ data?.title }}</span>
+        </nav>
 
-      <!-- Content -->
-      <article v-if="data" class="prose prose-invert prose-lg max-w-none bg-gray-800/50 p-8 rounded-2xl border border-gray-700/50">
-        <h1 class="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-          {{ data.title }}
-        </h1>
-        <ContentRenderer :value="data" />
-      </article>
+        <!-- Content -->
+        <article v-if="data" class="prose prose-invert prose-lg max-w-none bg-gray-800/50 p-8 rounded-2xl border border-gray-700/50">
+          <h1 class="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+            {{ data.title }}
+          </h1>
+          <ContentRenderer :value="data" />
+        </article>
 
-      <!-- Loading/Error -->
-      <div v-else class="text-center py-20 text-gray-500">
-        <p>文章加载中或不存在...</p>
+        <!-- Loading/Error -->
+        <div v-else class="text-center py-20 text-gray-500">
+          <p>文章加载中或不存在...</p>
+        </div>
       </div>
+
+      <aside class="hidden lg:block w-64 flex-shrink-0">
+        <TableOfContents :container="scrollContainer" :toc="data?.body?.toc" />
+      </aside>
     </div>
   </div>
 </template>
@@ -100,10 +106,10 @@ useHead(() => {
 <style>
 /* 自定义 Markdown 样式优化 */
 .prose h2 {
-  @apply text-purple-300 border-b border-gray-700 pb-2 mt-12;
+  @apply text-purple-300 border-b border-gray-700 pb-2 mt-12 scroll-mt-8;
 }
 .prose h3 {
-  @apply text-purple-200 mt-8;
+  @apply text-purple-200 mt-8 scroll-mt-8;
 }
 .prose code {
   @apply text-pink-300 bg-gray-800 px-1 py-0.5 rounded;
