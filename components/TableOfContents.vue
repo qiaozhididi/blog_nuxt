@@ -70,7 +70,7 @@ watch(
   () => {
     nextTick(setupObserver)
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 )
 
 onBeforeUnmount(() => {
@@ -89,6 +89,7 @@ onBeforeUnmount(() => {
         <a
           :href="`#${link.id}`"
           @click.prevent="scrollTo(link.id!)"
+          :aria-current="activeId === link.id ? 'location' : undefined"
           :class="[
             'block border-l-2 -ml-px py-1 pl-3 transition-colors',
             activeId === link.id
@@ -103,6 +104,7 @@ onBeforeUnmount(() => {
             <a
               :href="`#${child.id}`"
               @click.prevent="scrollTo(child.id!)"
+              :aria-current="activeId === child.id ? 'location' : undefined"
               :class="[
                 'block border-l-2 -ml-px py-1 pl-6 transition-colors',
                 activeId === child.id

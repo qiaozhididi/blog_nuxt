@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <aside class="hidden lg:block w-64 flex-shrink-0">
+      <aside v-if="data?.body?.toc?.links?.length" class="hidden lg:block w-64 flex-shrink-0">
         <TableOfContents :container="scrollContainer" :toc="data?.body?.toc" />
       </aside>
     </div>

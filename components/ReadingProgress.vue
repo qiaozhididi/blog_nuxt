@@ -14,14 +14,14 @@ function onScroll() {
     if (!el) return
     const max = el.scrollHeight - el.clientHeight
     // scrollHeight <= clientHeight（无滚动空间）时进度为 0，避免 NaN
-    progress.value = max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 0
+    progress.value = max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 1
   })
 }
 
 function bind(el: HTMLElement | null) {
   if (!el) return
   el.addEventListener('scroll', onScroll, { passive: true })
-  onScroll() // 初始化进度（直接读，不经过 rAF）
+  onScroll() // 初始化进度（首次调用经 rAF 调度，确保 mounted 后立即同步一次进度）
 }
 
 function unbind(el: HTMLElement | null) {
