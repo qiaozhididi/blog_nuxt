@@ -42,7 +42,7 @@ function setupObserver() {
   const headings = props.container.querySelectorAll<HTMLElement>('article.prose h2, article.prose h3')
   if (!headings.length) return
 
-  // rootMargin: 顶部 20% 到底部 70% 之外的带状区域算"可见"
+  // rootMargin: 底部上移 80%，留顶部 20% 区域；heading 进入视口顶部 20% 时视为 active
   observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -57,7 +57,7 @@ function setupObserver() {
     },
     {
       root: props.container,
-      rootMargin: '-20% 0px -70% 0px',
+      rootMargin: '0px 0px -80% 0px',
       threshold: 0,
     }
   )

@@ -13,7 +13,7 @@ function onScroll() {
     const el = props.container
     if (!el) return
     const max = el.scrollHeight - el.clientHeight
-    // scrollHeight <= clientHeight（无滚动空间）时进度为 0，避免 NaN
+    // scrollHeight <= clientHeight（无滚动空间，即文章一屏内）时进度为 1（100%），避免 NaN
     progress.value = max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 1
   })
 }
