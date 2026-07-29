@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen overflow-y-auto bg-gray-900 text-white p-8">
+  <div ref="scrollContainer" class="h-screen overflow-y-auto bg-gray-900 text-white p-8">
+    <ReadingProgress :container="scrollContainer" />
     <div class="max-w-4xl mx-auto">
       <!-- Navigation -->
       <nav class="mb-8 flex items-center gap-4 text-sm text-gray-400">
@@ -27,6 +28,11 @@
 </template>
 
 <script setup>
+// 滚动容器 ref：传给 ReadingProgress / TableOfContents，监听滚动与 IntersectionObserver
+// 注意：本文件 <script setup> 未声明 lang="ts"，用 ref(null) 避免 TS 类型注解；
+// Vue 会在 mounted 后自动将 DOM 元素赋值给 scrollContainer.value
+const scrollContainer = ref(null)
+
 const route = useRoute();
 // key 随路由变化，配合组件按路由 remount（见下方已移除静态 definePageMeta key），
 // 确保 SPA 切换文章时重新获取对应内容，而非复用上一篇缓存
