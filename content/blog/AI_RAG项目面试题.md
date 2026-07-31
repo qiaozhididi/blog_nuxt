@@ -36,7 +36,7 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种将"信息�
 
 **基本 RAG 流程：**
 
-```
+```text
 用户查询 → 向量化 → 向量检索 → 检索结果拼接 → LLM 生成
 ```
 
@@ -137,7 +137,7 @@ LangGraph 是 LangChain 团队推出的**有状态多步工作流编排框架**�
 
 **推荐回复图：**
 
-```
+```text
 chat_cleaner → customer_profiler → memory_retriever → weknora_rag → web_search → prompt_builder → llm → END
 ```
 
@@ -416,7 +416,7 @@ class StructuredReply(BaseModel):
 
 **通信架构：**
 
-```
+```text
 Content Script (content.js)
     ↓ chrome.runtime.sendMessage
 Service Worker (service-worker.js)

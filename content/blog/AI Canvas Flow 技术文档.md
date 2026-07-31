@@ -64,7 +64,7 @@ date: 2026-07-20
 
 ### 3.1 整体架构图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                      Frontend (Vite+React)                │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────────┐  │
@@ -102,7 +102,7 @@ date: 2026-07-20
 
 #### 目录结构
 
-```
+```text
 backend/
 ├── app/
 │   ├── main.py              # FastAPI 入口 + 生命周期 + Socket.IO 挂载
@@ -152,7 +152,7 @@ backend/
 
 #### 目录结构
 
-```
+```text
 frontend/src/
 ├── main.tsx                # React 入口
 ├── App.tsx                 # 路由配置
@@ -199,7 +199,7 @@ frontend/src/
 
 **单节点执行流程**：
 
-```
+```text
 executeNode(nodeId)
   ├─ collectUpstreamArtifacts() → 收集上游输出/虚拟 artifact
   ├─ 判断 AI 类型 → 获取 model_id + prompt
@@ -211,7 +211,7 @@ executeNode(nodeId)
 
 **全工作流编排**：
 
-```
+```text
 executeWorkflow()
   ├─ topologicalSort() → 按层分组（Kahn 算法）
   ├─ 按层并行执行（Promise.allSettled）
@@ -298,7 +298,7 @@ executeWorkflow()
 
 ### 4.7 数据库模型关系
 
-```
+```text
 User ──┬──< Project (owner)
        │         ├──< WorkflowNode
        │         ├──< WorkflowEdge
@@ -406,7 +406,7 @@ User ──┬──< Project (owner)
 #### Q9：canvasStore 如何与 historyStore、autoSaveStore、collabStore 协同工作？
 
 **答**：
-```
+```text
 用户操作 → canvasStore 更新状态
   ├─ 调用 useHistoryStore.pushAction() → 记录历史
   ├─ 调用 emitNodeChange() → collabStore 广播给远端

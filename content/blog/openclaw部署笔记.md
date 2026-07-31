@@ -20,37 +20,37 @@ https://openclaws.io/zh/
 ### 1.1 安装基础依赖
 
 #### 安装 Homebrew（如未安装）
-```
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 #### 安装 Node.js 22+
-```
+```bash
 brew install node@22`
 ```
 #### 验证 Node.js 版本
-```
+```bash
 node --version  # 应显示 v22.x.x 或更高
 
 ```
 #### 安装 Ollama 用于本地模型推理（可选）
-```
+```bash
 brew install ollama
 ```
 
 #### 安装 OpenClaw 
 
 ##### 方式一：一键脚本（推荐）
-```
+```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 ##### 方式二：npm 全局安装
-```
+```bash
 npm install -g openclaw@latest
 npm install -g openclaw
 ```
 
 #### 运行配置向导
-```
+```bash
 openclaw onboard --install-daemon
 ```
