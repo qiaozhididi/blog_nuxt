@@ -44,6 +44,10 @@ const route = useRoute();
 // 确保 SPA 切换文章时重新获取对应内容，而非复用上一篇缓存
 const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollection('blog').path(route.path).first());
 
+// 代码块增强：注入复制按钮 + 语言标签（DOM 层，hydration 后执行）
+// scrollContainer 与 route 已声明，直接复用；() => route.path 作为路由切换 trigger
+useCodeBlockEnhancer(scrollContainer, () => route.path)
+
 // 文章不存在时抛 404，避免返回 200 + 占位文本（SEO/UX）
 if (!data.value) {
   throw createError({ statusCode: 404, statusMessage: '文章不存在', fatal: true });
@@ -122,5 +126,72 @@ useHead(() => {
 }
 .prose img {
   @apply rounded-xl shadow-lg my-8;
+}
+
+/* ===== 代码块增强：语言标签 + 复制按钮 ===== */
+.code-block {
+  position: relative;
+}
+
+/* 语言标签：左上角 */
+.code-lang-tag {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.75rem;
+  font-size: 0.75rem;
+  color: rgba(156, 163, 175, 0.8);
+  font-family: 'Fira Code', 'Fira Sans', monospace;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+}
+
+/* 复制按钮：右上角 glass 风格 */
+.code-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  color: rgba(209, 213, 219, 0.9);
+  background: rgba(55, 65, 81, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+  z-index: 1;
+}
+
+/* 移动端常显，桌面端 hover 显示 */
+.code-copy-btn { opacity: 1; }
+@media (min-width: 768px) {
+  .code-copy-btn { opacity: 0; }
+  .code-block:hover .code-copy-btn { opacity: 1; }
+}
+
+.code-copy-btn:hover {
+  color: white;
+  background: rgba(75, 85, 99, 0.95);
+}
+
+/* 按钮文字用 ::after content 切换，避免操作 DOM 文本节点 */
+.code-copy-btn .copy-label::after { content: '复制'; }
+.code-copy-btn.copied .copy-label::after { content: '✓ 已复制'; }
+.code-copy-btn.failed .copy-label::after { content: '复制失败'; }
+
+/* CSS 动画控制 2 秒状态反馈，animationend 事件清理 class（无 setTimeout） */
+.code-copy-btn.copied { animation: copy-feedback 2s ease; }
+.code-copy-btn.failed { animation: copy-fail 2s ease; }
+
+@keyframes copy-feedback {
+  0%, 85% { color: #4ade80; }   /* 绿色持续 85% */
+  100% { color: inherit; }      /* 恢复 */
+}
+
+@keyframes copy-fail {
+  0%, 85% { color: #f87171; }   /* 红色持续 85% */
+  100% { color: inherit; }
 }
 </style>
