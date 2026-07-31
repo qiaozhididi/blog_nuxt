@@ -106,37 +106,55 @@ export function useCodeBlockEnhancer(
 
 **SPA 路由切换**：`scrollContainer` ref 指向最外层 div（路由切换不销毁），`watch(container)` 不触发。需传入 `trigger`（如 `() => route.path`）确保路由切换后新 pre（无 `dataset.enhanced`）被注入。
 
-### 5.4 复制按钮 + "复制成功"反馈（3 态）
+### 5.4 复制按钮 + "复制成功"反馈（CSS 动画，无 JS 定时器）
 
 按钮状态：
-- **默认态**：显示"复制"文字（或图标 + 文字），`text-gray-300`
+- **默认态**：`::after content: '复制'`，`text-gray-300`
 - **hover 态**：`hover:text-white hover:bg-gray-600/80`
-- **已复制态**：点击后，文字变"✓ 已复制"，颜色 `text-green-400`，2 秒后恢复默认态
+- **已复制态**：加 `.copied` class，`::after content: '✓ 已复制'`，CSS animation 2 秒（绿色持续 85% → 恢复）
+- **失败态**：加 `.failed` class，`::after content: '复制失败'`，红色 animation
 
-实现：
+实现（CSS animation + animationend 事件，**无 setTimeout**）：
+
+按钮 DOM 结构（composable 注入）：
+```html
+<button class="code-copy-btn"><span class="copy-label"></span></button>
+```
+
+CSS（写在 `pages/blog/[...slug].vue` 的 `<style>` 或 main.css）：
+```css
+.code-copy-btn .copy-label::after { content: '复制'; }
+.code-copy-btn.copied .copy-label::after { content: '✓ 已复制'; }
+.code-copy-btn.failed .copy-label::after { content: '复制失败'; }
+.code-copy-btn.copied { animation: copy-feedback 2s ease; }
+.code-copy-btn.failed { animation: copy-fail 2s ease; }
+@keyframes copy-feedback {
+  0%, 85% { color: #4ade80; }   /* 绿色持续 85% */
+  100% { color: inherit; }      /* 恢复 */
+}
+@keyframes copy-fail {
+  0%, 85% { color: #f87171; }   /* 红色持续 85% */
+  100% { color: inherit; }
+}
+```
+
+JS（composable 内，animationend 清理 class，一次监听）：
 ```ts
-const btn = document.createElement('button')
-btn.className = '...'
-btn.textContent = '复制'
 btn.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(pre.textContent || '')
-    btn.textContent = '✓ 已复制'
-    btn.classList.add('text-green-400')
-    btn.classList.remove('text-gray-300')
-    setTimeout(() => {
-      btn.textContent = '复制'
-      btn.classList.remove('text-green-400')
-      btn.classList.add('text-gray-300')
-    }, 2000)
+    btn.classList.remove('failed')
+    btn.classList.add('copied')
+    btn.addEventListener('animationend', () => btn.classList.remove('copied'), { once: true })
   } catch {
-    // 降级：execCommand 或提示失败
-    btn.textContent = '复制失败'
-    setTimeout(() => { btn.textContent = '复制' }, 2000)
+    btn.classList.remove('copied')
+    btn.classList.add('failed')
+    btn.addEventListener('animationend', () => btn.classList.remove('failed'), { once: true })
   }
 })
 ```
 
+**优势**：无 JS 定时器，CSS animation 控制时序（2 秒 + 颜色渐变），`animationend` 事件清理（一次监听，自动移除）。
 **样式**：glass 玻璃态，`bg-gray-700/80 backdrop-blur px-2 py-1 rounded text-xs`，与现有 `.btn-primary` 风格一致。
 
 ### 5.5 语言标签
