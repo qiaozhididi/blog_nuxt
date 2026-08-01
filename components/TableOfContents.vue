@@ -17,7 +17,10 @@ let observer: IntersectionObserver | null = null
 
 function scrollTo(id: string) {
   const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth' })
+  // 更新 URL hash，便于分享和书签（replaceState 不留历史记录）
+  history.replaceState(null, '', `#${id}`)
 }
 
 // 从可见 heading 中选取 DOM 顺序最靠前的一个作为 active

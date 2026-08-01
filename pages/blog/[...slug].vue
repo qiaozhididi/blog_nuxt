@@ -48,6 +48,20 @@ const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollec
 // scrollContainer 与 route 已声明，直接复用；() => route.path 作为路由切换 trigger
 useCodeBlockEnhancer(scrollContainer, () => route.path)
 
+// 深链锚点：访问 /blog/xxx#section 时自动滚动到对应章节
+// 等 data 加载 + DOM 渲染后执行；用 'auto' 瞬间定位（非 smooth 动画）
+watch(() => data.value, (val) => {
+  if (!val) return
+  const hash = route.hash.slice(1)
+  if (!hash) return
+  nextTick(() => {
+    setTimeout(() => {
+      const el = document.getElementById(hash)
+      if (el) el.scrollIntoView({ behavior: 'auto' })
+    }, 100)
+  })
+}, { immediate: true })
+
 // 文章不存在时抛 404，避免返回 200 + 占位文本（SEO/UX）
 if (!data.value) {
   throw createError({ statusCode: 404, statusMessage: '文章不存在', fatal: true });
