@@ -26,13 +26,13 @@ useHead({
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center bg-gray-900 text-white p-8">
+  <div class="h-screen flex items-center justify-center bg-white text-gray-900 dark:bg-gray-900 dark:text-white p-8">
     <div class="text-center max-w-md">
       <div class="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
         {{ error?.statusCode || '错误' }}
       </div>
       <h1 class="text-2xl md:text-3xl font-bold mb-4">{{ errorTitle }}</h1>
-      <p class="text-gray-400 mb-8">{{ errorMessage }}</p>
+      <p class="text-gray-600 dark:text-gray-400 mb-8">{{ errorMessage }}</p>
       <button @click="handleError" class="btn-primary">
         <i class="fa fa-home mr-2" aria-hidden="true"></i>返回首页
       </button>

@@ -87,7 +87,7 @@ onBeforeUnmount(() => {
 <template>
   <nav v-if="toc?.links?.length" aria-label="目录" class="sticky top-8 text-sm">
     <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">目录</p>
-    <ul class="space-y-1 border-l border-gray-700/50">
+    <ul class="space-y-1 border-l border-gray-300 dark:border-gray-700/50">
       <li v-for="link in toc.links" :key="link.id">
         <a
           :href="`#${link.id}`"
@@ -96,8 +96,8 @@ onBeforeUnmount(() => {
           :class="[
             'block border-l-2 -ml-px py-1 pl-3 transition-colors',
             activeId === link.id
-              ? 'border-purple-400 text-purple-300 font-medium'
-              : 'border-transparent text-gray-400 hover:text-gray-200'
+              ? 'border-purple-400 text-purple-600 dark:text-purple-300 font-medium'
+              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           ]"
         >
           {{ link.text }}
@@ -111,8 +111,8 @@ onBeforeUnmount(() => {
               :class="[
                 'block border-l-2 -ml-px py-1 pl-6 transition-colors',
                 activeId === child.id
-                  ? 'border-purple-400 text-purple-300 font-medium'
-                  : 'border-transparent text-gray-500 hover:text-gray-300'
+                  ? 'border-purple-400 text-purple-600 dark:text-purple-300 font-medium'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
               ]"
             >
               {{ child.text }}

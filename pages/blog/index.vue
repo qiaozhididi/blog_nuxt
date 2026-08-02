@@ -1,11 +1,11 @@
 <template>
-  <div class="h-screen overflow-y-auto bg-gray-900 text-white p-8">
+  <div class="h-screen overflow-y-auto bg-white text-gray-900 dark:bg-gray-900 dark:text-white p-8">
     <div class="max-w-4xl mx-auto">
       <div class="flex justify-between items-center mb-12">
         <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
           我的 Obsidian 笔记
         </h1>
-        <NuxtLink to="/" class="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
+        <NuxtLink to="/" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition">
           返回首页
         </NuxtLink>
       </div>
@@ -27,10 +27,10 @@
               v-for="article in list" 
               :key="article.path" 
               :to="article.path"
-              class="block p-6 bg-gray-800 rounded-xl hover:bg-gray-700 transition transform hover:-translate-y-1 hover:shadow-xl border border-gray-700"
+              class="block p-6 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition transform hover:-translate-y-1 hover:shadow-xl border border-gray-300 dark:border-gray-700"
             >
-              <h2 class="text-2xl font-bold mb-2 text-white">{{ article.title || article.path }}</h2>
-              <p class="text-gray-400 mb-4">{{ article.description || '暂无描述' }}</p>
+              <h2 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">{{ article.title || article.path }}</h2>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">{{ article.description || '暂无描述' }}</p>
               <div class="flex items-center text-sm text-gray-500">
                 <span class="mr-4">
                   <Icon name="clock" class="mr-1" />

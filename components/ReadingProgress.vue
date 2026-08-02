@@ -43,7 +43,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="fixed top-0 left-0 right-0 z-50 h-[3px] bg-gray-800/50"
+    class="fixed top-0 left-0 right-0 z-50 h-[3px] bg-gray-200/50 dark:bg-gray-800/50"
     role="progressbar"
     aria-label="阅读进度"
     :aria-valuenow="Math.round(progress * 100)"
