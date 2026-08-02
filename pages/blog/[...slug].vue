@@ -33,6 +33,16 @@
         <TableOfContents :container="scrollContainer" :toc="data?.body?.toc" />
       </aside>
     </div>
+
+    <!-- 图片 lightbox -->
+    <Lightbox
+      :is-open="lightboxOpen"
+      :images="lightboxImages"
+      :current-index="lightboxIndex"
+      @close="closeLightbox"
+      @next="nextLightbox"
+      @prev="prevLightbox"
+    />
   </div>
 </template>
 
@@ -50,6 +60,9 @@ const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollec
 // 代码块增强：注入复制按钮 + 语言标签（DOM 层，hydration 后执行）
 // scrollContainer 与 route 已声明，直接复用；() => route.path 作为路由切换 trigger
 useCodeBlockEnhancer(scrollContainer, () => route.path)
+
+// 图片 lightbox：监听 .prose img 点击，弹出全屏大图
+const { isOpen: lightboxOpen, images: lightboxImages, currentIndex: lightboxIndex, close: closeLightbox, next: nextLightbox, prev: prevLightbox } = useLightbox(scrollContainer, () => route.path)
 
 // 深链锚点：访问 /blog/xxx#section 时自动滚动到对应章节
 // 等 data 加载 + DOM 渲染后执行；用 'auto' 瞬间定位（非 smooth 动画）
