@@ -7,6 +7,10 @@ const DEFAULT_OG_IMAGE = `${SITE_URL}/images/CodePen.png`
 
 const route = useRoute()
 
+// 主题初始化：同步 useState 与 localStorage（防闪烁脚本已设 html class）
+const { init } = useTheme()
+onMounted(() => init())
+
 // 全局头部：lang、canonical、默认 OG/Twitter Card。
 // - canonical 随 route.path 动态变化，避免子路径部署产生的重复内容问题
 // - 各页面 useHead 覆盖 og:title/og:description/og:type 等特定字段
@@ -39,6 +43,11 @@ useHead(() => ({
         inLanguage: 'zh-CN',
         description: '乔治弟弟的个人博客 - 探索代码的无限可能',
       }),
+    },
+    // 防闪烁脚本：渲染前读 localStorage，亮色不加 class，其他加 dark class
+    {
+      innerHTML: `if(localStorage.getItem('theme')!=='light')document.documentElement.classList.add('dark')`,
+      tagPosition: 'head',
     },
   ],
 }))

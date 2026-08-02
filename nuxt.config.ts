@@ -5,6 +5,19 @@ export default defineNuxtConfig({
     '@nuxt/content'
   ],
   css: ['~/assets/css/main.css'],
+  // @nuxt/content Shiki 多主题：default=亮色（无 dark class），dark=暗色（html.dark）
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: {
+            default: 'github-light',
+            dark: 'github-dark',
+          },
+        },
+      },
+    },
+  },
   nitro: {
     prerender: {
       // SSG 预渲染 sitemap.xml 为静态文件：GitHub Pages 为纯静态托管，

@@ -5,7 +5,7 @@
 /* Custom Styles */
 body {
   font-family: 'Fira Sans', sans-serif;
-  @apply bg-gray-900 text-white;
+  @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
 }
 
 /* Global Button Style - 半透明玻璃态 */
@@ -30,4 +30,15 @@ body {
 /* Force white text for Reveal.js compatibility */
 .reveal .btn-primary {
   color: white !important;
+}
+
+/* Shiki 多主题：暗色模式（html.dark）覆盖为 dark 主题 CSS 变量 */
+/* 亮色（默认）使用 default 主题的内联颜色，无需额外 CSS */
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
 }
