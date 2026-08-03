@@ -17,9 +17,10 @@
 
         <!-- Content -->
         <article v-if="data" class="prose dark:prose-invert prose-lg max-w-none bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl border border-gray-300 dark:border-gray-700/50">
-          <h1 class="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
             {{ data.title }}
           </h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-8">约 {{ readingTime }} 分钟阅读</p>
           <ContentRenderer :value="data" />
         </article>
 
@@ -27,6 +28,27 @@
         <div v-else class="text-center py-20 text-gray-500">
           <p>文章加载中或不存在...</p>
         </div>
+
+        <!-- 上下篇导航 -->
+        <nav v-if="data && (nav.prev || nav.next)" class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <NuxtLink
+            v-if="nav.prev"
+            :to="nav.prev.path"
+            class="block p-4 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition border border-gray-300 dark:border-gray-700"
+          >
+            <span class="text-xs text-gray-500 dark:text-gray-400">上一篇</span>
+            <p class="font-medium text-gray-900 dark:text-white mt-1 line-clamp-2">{{ nav.prev.title }}</p>
+          </NuxtLink>
+          <div v-else class="hidden sm:block"></div>
+          <NuxtLink
+            v-if="nav.next"
+            :to="nav.next.path"
+            class="block p-4 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition border border-gray-300 dark:border-gray-700 sm:text-right"
+          >
+            <span class="text-xs text-gray-500 dark:text-gray-400">下一篇</span>
+            <p class="font-medium text-gray-900 dark:text-white mt-1 line-clamp-2">{{ nav.next.title }}</p>
+          </NuxtLink>
+        </nav>
       </div>
 
       <aside v-if="data?.body?.toc?.links?.length" class="hidden lg:block w-64 flex-shrink-0">
@@ -43,6 +65,9 @@
       @next="nextLightbox"
       @prev="prevLightbox"
     />
+
+    <!-- 返回顶部按钮 -->
+    <BackToTop :container="scrollContainer" />
   </div>
 </template>
 
@@ -56,6 +81,24 @@ const route = useRoute();
 // key 随路由变化，配合组件按路由 remount（见下方已移除静态 definePageMeta key），
 // 确保 SPA 切换文章时重新获取对应内容，而非复用上一篇缓存
 const { data } = await useAsyncData(`page-data-${route.path}`, () => queryCollection('blog').path(route.path).first());
+
+// 阅读时间：按 300 字/分钟估算（中文阅读速度）
+const readingTime = computed(() => {
+  const text = extractPlainText(data.value?.body)
+  return Math.max(1, Math.ceil(text.length / 300))
+})
+
+// 上下篇导航：按日期升序，prev=更旧文章，next=更新文章
+const { data: allPosts } = await useAsyncData('nav-posts', () => queryCollection('blog').all())
+const nav = computed(() => {
+  if (!allPosts.value) return { prev: null, next: null }
+  const posts = [...allPosts.value].sort((a, b) => new Date(a.date) - new Date(b.date))
+  const currentIndex = posts.findIndex(p => p.path === route.path)
+  return {
+    prev: currentIndex > 0 ? posts[currentIndex - 1] : null,
+    next: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null,
+  }
+})
 
 // 代码块增强：注入复制按钮 + 语言标签（DOM 层，hydration 后执行）
 // scrollContainer 与 route 已声明，直接复用；() => route.path 作为路由切换 trigger

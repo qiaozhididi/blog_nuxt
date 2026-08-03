@@ -64,13 +64,7 @@
 const { data: list, pending, error } = await useAsyncData('blog-list', () => queryCollection('blog').all());
 
 // ===== 全文搜索 =====
-// 从 @nuxt/content body AST 递归提取纯文本（type=text 节点的 value）
-function extractPlainText(node) {
-  if (!node) return ''
-  if (node.type === 'text') return node.value || ''
-  if (Array.isArray(node.children)) return node.children.map(extractPlainText).join('')
-  return ''
-}
+// extractPlainText 从 utils/content.ts 自动导入（与详情页阅读时间共用）
 
 const searchQuery = ref('')
 
