@@ -62,6 +62,9 @@ export function useLightbox(
       if (img.dataset.lightboxEnhanced) return
       img.dataset.lightboxEnhanced = 'true'
       img.style.cursor = 'zoom-in'
+      // 图片懒加载：延迟加载视口外的图片，减少首屏请求
+      img.loading = 'lazy'
+      img.decoding = 'async'
       img.addEventListener('click', (e) => {
         e.preventDefault()
         open(i)

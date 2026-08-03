@@ -6,6 +6,8 @@ const SITE_NAME = '乔治弟弟_Blog'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/CodePen.png`
 
 const route = useRoute()
+// favicon 路径：用 baseURL 拼接，适配 GitHub Pages 子路径部署（/ 或 /blog_nuxt/）
+const faviconHref = `${useRuntimeConfig().app.baseURL}favicon.ico`
 
 // 主题初始化：同步 useState 与 localStorage（防闪烁脚本已设 html class）
 const { init } = useTheme()
@@ -19,6 +21,7 @@ useHead(() => ({
   // 标题模板：有子页面标题则加后缀，首页（无标题）由 else 分支返回默认站点名
   titleTemplate: (title?: string) => title ? `${title} - ${SITE_NAME}` : SITE_NAME,
   link: [
+    { rel: 'icon', href: faviconHref, type: 'image/x-icon' },
     { rel: 'canonical', href: `${SITE_URL}${route.path}` },
     // RSS 自动发现：让 RSS 阅读器（Feedly、Inoreader 等）从任意页面发现订阅源
     { rel: 'alternate', type: 'application/rss+xml', title: SITE_NAME, href: `${SITE_URL}/rss.xml` },
