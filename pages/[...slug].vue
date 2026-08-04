@@ -139,10 +139,8 @@
 import { onMounted, nextTick, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
-// Import Reveal styles
-import 'reveal.js/dist/reveal.css';
-import 'reveal.js/dist/theme/black.css';
-// 仅引入 Reveal.js 的类型定义（不打包运行时代码，运行时仍走动态 import）
+// 仅引入 Reveal.js 的类型定义（不打包运行时代码）
+// CSS + 运行时均改为 initReveal() 内动态 import，避免进主 CSS bundle（博客页不加载 reveal 样式与字体）
 import type Reveal from 'reveal.js';
 
 // 站点配置数据类型：根据 data/site-config.json 的结构定义
@@ -441,6 +439,11 @@ async function initReveal() {
     const revealEl = revealContainer.value;
     if (revealEl && !revealInstance) {
       try {
+        // 动态导入 Reveal 样式：与 JS 一起在 PPT 页面按需加载，避免进主 CSS bundle
+        // 博客页不加载 reveal.css + source-sans-pro 字体（2.1MB）
+        // PPT 页面有 loading 遮罩，CSS 加载完才移除，无无样式闪烁
+        await import('reveal.js/dist/reveal.css');
+        await import('reveal.js/dist/theme/black.css');
         // Dynamic import for client-side only
         const Reveal = (await import('reveal.js')).default;
         const Markdown = (await import('reveal.js/plugin/markdown/markdown.esm.js')).default;
