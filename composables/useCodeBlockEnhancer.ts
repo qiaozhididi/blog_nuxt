@@ -3,7 +3,8 @@
 // 复制状态反馈用 CSS @keyframes 动画（2s）+ animationend 事件清理，无 JS 定时器
 import { nextTick, watch, type Ref } from 'vue'
 
-// 语言标识 → 友好显示名映射；text/空 不显示标签
+// 语言标识 → 友好显示名映射；text/plaintext/空 映射为空串 → 不显示语言标签
+// （这类块内容为 ASCII 图/目录树/流程图，非代码，无需声明语言）
 const langMap: Record<string, string> = {
   bash: 'Bash',
   sh: 'Shell',
@@ -21,6 +22,7 @@ const langMap: Record<string, string> = {
   css: 'CSS',
   sql: 'SQL',
   text: '',
+  plaintext: '',
   '': '',
 }
 
@@ -84,8 +86,9 @@ function enhancePre(pre: HTMLPreElement) {
   pre.parentNode?.insertBefore(wrapper, pre)
   wrapper.appendChild(pre)
 
-  // 3. 注入语言标签（非 text/空 时）
-  const label = langMap[lang] ?? (lang && lang !== 'text' ? lang : '')
+  // 3. 注入语言标签：map 命中（含 text/plaintext/空 → ''）则用映射值；
+  //    未命中的语言直接用 lang 原值显示。空串 falsy → 不注入标签
+  const label = langMap[lang] ?? lang
   if (label) {
     const tag = document.createElement('span')
     tag.textContent = label
