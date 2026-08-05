@@ -6,6 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
+    "typecheck": "vue-tsc --noEmit",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
@@ -21,11 +22,6 @@
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^25.3.0",
-    "autoprefixer": "^10.4.24",
-    "postcss": "^8.5.6",
-    "sass": "^1.83.4",
-    "sass-loader": "^16.0.4",
-    "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
     "vite": "^8.1.5",
     "vue-tsc": "^3.3.8"
